@@ -1,0 +1,71 @@
+.cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+}
+
+.card {
+    background-color: white;
+    box-shadow: 0 0 1rem rgba(0, 0, 0, 0.2);
+    padding: 2rem;
+    border-radius: 1.3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.card-header {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card-header img {
+    z-index: 10;
+
+}
+
+.poke-id-bg {
+    position: absolute;
+    font-size: 8rem;
+    font-weight: bold;
+    color: rgb(228, 228, 228);
+
+}
+
+.card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.card-body-info {
+    font-weight: 500;
+}
+
+.card-body-info p:nth-child(2) {
+    font-size: 2rem;
+    font-weight: bolder;
+    background-color: unset;
+}
+
+.poke-info {
+    background-color: rgb(228, 228, 228);
+    padding: .3rem 1rem;
+    border-radius: 50px;
+
+}
+
+.card-body .filter {
+    box-shadow: unset;
+}
+
+.card-body-info,
+.card-body-filters,
+.card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}

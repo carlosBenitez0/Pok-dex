@@ -1,0 +1,17 @@
+.header-container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.150);
+}
+
+.header {
+    padding: 2rem;
+    width: 70%;
+}
+
+.logo-container img {
+    height: 4rem;
+    margin-bottom: 2rem;
+}

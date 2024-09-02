@@ -1,0 +1,94 @@
+.filter {
+    padding: .5rem 1.5rem;
+    border-radius: 50px;
+    box-shadow: 0 0 1rem rgba(0, 0, 0, 0.519);
+    background-color: rgb(236, 236, 236);
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.color-white {
+    color: white;
+}
+
+.normal {
+    background-color: #A8A876;
+}
+
+.fire {
+    background-color: #ED8030;
+}
+
+.water {
+    background-color: #698FEF;
+    color: white;
+}
+
+.grass {
+    background-color: #7AC757;
+}
+
+.electric {
+    background-color: #F9CE2F;
+}
+
+.ice {
+    background-color: #9AD9D8;
+}
+
+.fighting {
+    background-color: #C52E2A;
+    color: white;
+}
+
+.poison {
+    background-color: #9E40A0;
+    color: white;
+}
+
+.ground {
+    background-color: #DEBD67;
+}
+
+.flying {
+    background-color: #A990F1;
+}
+
+.psychic {
+    background-color: #F85888;
+}
+
+.bug {
+    background-color: #AAB821;
+}
+
+.rock {
+    background-color: #B5A038;
+}
+
+.ghost {
+    background-color: #6D579A;
+    color: white;
+}
+
+.dark {
+    background-color: #6E5646;
+    color: white;
+}
+
+.dragon {
+    background-color: #7139FC;
+    color: white;
+}
+
+.steel {
+    background-color: #B8B8D4;
+}
+
+.fairy {
+    background-color: #EDB3BC;
+}
+
+.filter:hover {
+    scale: 1.1;
+}
