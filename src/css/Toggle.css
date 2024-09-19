@@ -1,0 +1,147 @@
+:root {
+    /* Colores de Charizard */
+    --charizard-normal-orange: rgb(240, 128, 48);
+    --charizard-normal-green: rgb(104, 144, 240);
+    --charizard-shiny-black: rgb(54, 57, 62);
+    --charizard-shiny-red: rgb(240, 64, 56);
+
+    /* Colores de Metagross */
+    --metagross-normal-gray-blue: rgb(112, 136, 144);
+    --metagross-normal-silver: rgb(184, 184, 208);
+    --metagross-shiny-silver: rgb(240, 240, 240);
+    --metagross-shiny-gold: rgb(248, 208, 48);
+}
+
+.toggle-container {
+    display: flex;
+    gap: .7rem;
+}
+
+.toggles-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    width: 100%;
+    gap: 2rem;
+}
+
+
+.toggle-container p {
+    font-weight: bold;
+    order: 1;
+}
+
+input[type=checkbox] {
+    height: 0;
+    width: 0;
+    visibility: hidden;
+}
+
+label {
+    cursor: pointer;
+    text-indent: -9999px;
+    width: 50px;
+    height: 25px;
+    background: var(--charizard-normal-orange);
+    display: flex;
+    align-items: center;
+    border-radius: 100px;
+    position: relative;
+    order: 2;
+}
+
+label:after {
+    content: '';
+    position: absolute;
+    top: 7px;
+    left: 5px;
+    width: 20px;
+    height: 10px;
+    background: #fff;
+    border-radius: 90px;
+}
+
+input:checked+label {
+    background: linear-gradient(to left, var(--charizard-shiny-black), var(--charizard-shiny-red));
+}
+
+.toggle-container input[type="checkbox"]:checked~p {
+    color: transparent;
+    background: linear-gradient(to right, var(--charizard-shiny-black), var(--charizard-shiny-red));
+    background-clip: text;
+}
+
+
+input:checked+label:after {
+    left: calc(100% - 5px);
+    transform: translateX(-100%);
+    background-image: linear-gradient(to right, var(--metagross-normal-gray-blue), var(--metagross-shiny-silver));
+}
+
+/* .//////////////////////////////////// */
+.toggle-back-normal label {
+    background-color: green;
+}
+
+.toggle-back-normal input[type="checkbox"]:checked~p {
+    color: black;
+}
+
+.toggle-back-normal input:checked+label {
+    background-image: unset;
+    background-color: green;
+}
+
+.toggle-back-normal input:checked+label:after {
+    background-image: unset;
+}
+
+/* .//////////////////////////////////// */
+.toggle-front-back label {
+    background-color: green;
+    background: linear-gradient(to right, var(--charizard-shiny-red), var(--metagross-shiny-gold));
+}
+
+.toggle-front-back input[type="checkbox"]:checked~p {
+    color: transparent;
+    background: linear-gradient(to right, var(--charizard-shiny-red), var(--metagross-shiny-gold));
+    background-clip: text;
+}
+
+.toggle-front-back input~p {
+    color: transparent;
+    background: linear-gradient(to right, var(--charizard-shiny-red), var(--metagross-shiny-gold));
+    background-clip: text;
+}
+
+.toggle-front-back input:checked+label {
+    background: linear-gradient(to left, var(--charizard-shiny-red), var(--metagross-shiny-gold));
+}
+
+
+
+
+
+
+/*Togle Card*/
+.toggle-card {
+    display: flex;
+    align-items: center;
+
+}
+
+.toggles-card-container p {
+    font-size: 1.5rem;
+}
+
+.toggle-card label {
+    height: 1.5rem;
+    width: 5rem;
+}
+
+.toggle-card label:after {
+    top: 2px;
+    left: 5px;
+    width: 10px;
+    height: 10px;
+}

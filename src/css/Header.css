@@ -4,14 +4,21 @@
     align-items: center;
     justify-content: center;
     box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.150);
+    gap: 2rem;
 }
 
 .header {
     padding: 2rem;
-    width: 70%;
+    width: 75%;
 }
 
 .logo-container img {
     height: 4rem;
     margin-bottom: 2rem;
+}
+
+.header-top {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
 }

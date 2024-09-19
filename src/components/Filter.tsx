@@ -12,7 +12,7 @@ function Filter({ filterName, filterColor, onClick }: Props) {
       className={`filter ${filterColor}`}
       onClick={() => onClick(filterName)}
     >
-      <p className={"filter-text"}>{filterName.toUpperCase()}</p>
+      <p className="filter-text">{filterName.toUpperCase()}</p>
     </div>
   );
 }
