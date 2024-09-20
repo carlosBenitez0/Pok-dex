@@ -45,7 +45,7 @@ function ButtonDarkMode({}: Props) {
 
   return (
     <div
-      className="flex items-center bg-[#444444] hover:bg-[#666666] p-2 rounded-full cursor-pointer dark:bg-[#2c3e50] dark:hover:bg-[#2c3e70] text-gradient-to-r from-cyan-500 to-blue-500 "
+      className="text-gradient-to-r flex cursor-pointer items-center rounded-full bg-[#444444] from-cyan-500 to-blue-500 p-2 hover:bg-[#666666] dark:bg-[#2c3e50] dark:hover:bg-[#2c3e70]"
       onClick={changeTheme}
     >
       {theme === "light" ? (

@@ -62,7 +62,7 @@ function Card({
   };
 
   return (
-    <div className="card dark:bg-[#1c1f26] dark:border-2 dark:border-[#383d47]  border-2 border-[#d4d4d4] dark:text-slate-300">
+    <div className="card border-2 border-[#d4d4d4] dark:border-2 dark:border-[#383d47] dark:bg-[#1c1f26] dark:text-slate-300">
       <div className="card-header">
         <div className="toggles-card-container">
           <ToggleCard
@@ -87,7 +87,7 @@ function Card({
           {/* background-color: rgb(228, 228, 228);
     padding: .3rem 1rem;
     border-radius: 50px; */}
-          <p className="dark:bg-[rgba(107,114,128,0.1)] rounded-full py-1 px-4">
+          <p className="rounded-full px-4 py-1 dark:bg-[rgba(107,114,128,0.1)]">
             #{addZeros(id)}
           </p>
           <p className="poke-info">{name.toUpperCase()}</p>
