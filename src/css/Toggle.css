@@ -21,7 +21,6 @@
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    width: 100%;
     gap: 2rem;
 }
 
@@ -65,7 +64,7 @@ input:checked+label {
     background: linear-gradient(to left, var(--charizard-shiny-black), var(--charizard-shiny-red));
 }
 
-.toggle-container input[type="checkbox"]:checked~p {
+.toggle-container-input-checked {
     color: transparent;
     background: linear-gradient(to right, var(--charizard-shiny-black), var(--charizard-shiny-red));
     background-clip: text;
@@ -81,10 +80,6 @@ input:checked+label:after {
 /* .//////////////////////////////////// */
 .toggle-back-normal label {
     background-color: green;
-}
-
-.toggle-back-normal input[type="checkbox"]:checked~p {
-    color: black;
 }
 
 .toggle-back-normal input:checked+label {
@@ -118,7 +113,10 @@ input:checked+label:after {
     background: linear-gradient(to left, var(--charizard-shiny-red), var(--metagross-shiny-gold));
 }
 
-
+/* LA == label:after */
+.toggleIsShinyLA:after {
+    background-image: linear-gradient(to right, var(--metagross-normal-gray-blue), var(--metagross-shiny-silver));
+}
 
 
 

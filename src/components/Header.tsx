@@ -7,7 +7,7 @@ type Props = {
 
 function Header({ children }: Props) {
   return (
-    <div className="header-container">
+    <div className="header-container shadow-xl shadow-slate-500/10">
       <header className="header">{children}</header>
     </div>
   );

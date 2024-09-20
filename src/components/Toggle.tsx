@@ -8,10 +8,16 @@ type Props = {
 
 const Toggle = ({ onClic, typeOfPokemon }: Props) => {
   return (
-    <div className="toggle-container">
+    <div
+      className={`toggle-container ${
+        typeOfPokemon === "SHINY" ? "toggle-container-input-checked" : ""
+      }`}
+    >
       <input onClick={onClic} type="checkbox" id="switch" />
       <label htmlFor="switch"></label>
-      <p>{typeOfPokemon}</p>
+      <p className={typeOfPokemon !== "SHINY" ? "dark:text-slate-300" : ""}>
+        {typeOfPokemon}
+      </p>
     </div>
   );
 };
@@ -33,9 +39,17 @@ export const ToggleFrontBack = ({
         normalShiny === "NORMAL" ? "toggle-back-normal" : "toggle-front-back"
       }`}
     >
-      <input onClick={onClic} type="checkbox" id="frontBack" />
-      <label htmlFor="frontBack"></label>
-      <p>{frontBack.toUpperCase()}</p>
+      <input
+        onClick={onClic}
+        type="checkbox"
+        id="frontBack"
+        className="peer hidden"
+      />
+      <label
+        htmlFor="frontBack"
+        className={normalShiny === "SHINY" ? "toggleIsShinyLA" : ""}
+      ></label>
+      <p className="dark:text-slate-300">{frontBack.toUpperCase()}</p>
     </div>
   );
 };
@@ -63,7 +77,11 @@ export const ToggleCard = ({
   }, [isNormal]);
 
   return (
-    <div className="toggle-container toggle-card">
+    <div
+      className={`toggle-container toggle-card ${
+        !isNormal ? "toggle-container-input-checked" : ""
+      }`}
+    >
       <input
         ref={toggleRef}
         onClick={changeTypeFunction}
@@ -111,7 +129,10 @@ export const ToggleFrontBackCard = ({
         id={idPokemonFront}
         ref={toggleRef}
       />
-      <label htmlFor={idPokemonFront}></label>
+      <label
+        htmlFor={idPokemonFront}
+        className={!isNormal ? "toggleIsShinyLA" : ""}
+      ></label>
       <p>{isFront === true ? "FRONT" : "BACK"}</p>
     </div>
   );

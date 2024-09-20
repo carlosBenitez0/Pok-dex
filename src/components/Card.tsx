@@ -62,7 +62,7 @@ function Card({
   };
 
   return (
-    <div className="card">
+    <div className="card dark:bg-[#1c1f26] dark:border-2 dark:border-[#383d47]  border-2 border-[#d4d4d4] dark:text-slate-300">
       <div className="card-header">
         <div className="toggles-card-container">
           <ToggleCard
@@ -77,12 +77,19 @@ function Card({
             idPokemonFront={name + "_fb"}
           />
         </div>
-        <p className="poke-id-bg">#{addZeros(id)}</p>
+        <p className="poke-id-bg text-gray-300 dark:text-gray-300 dark:opacity-10">
+          #{addZeros(id)}
+        </p>
         <img src={getSelectedImage()} alt={name} />
       </div>
       <div className="card-body">
         <div className="card-body-info">
-          <p className="poke-info">#{addZeros(id)}</p>
+          {/* background-color: rgb(228, 228, 228);
+    padding: .3rem 1rem;
+    border-radius: 50px; */}
+          <p className="dark:bg-[rgba(107,114,128,0.1)] rounded-full py-1 px-4">
+            #{addZeros(id)}
+          </p>
           <p className="poke-info">{name}</p>
         </div>
         <div className="card-body-filters">

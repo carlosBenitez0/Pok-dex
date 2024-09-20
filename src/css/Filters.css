@@ -1,10 +1,9 @@
 .filter {
     padding: .5rem 1.5rem;
     border-radius: 50px;
-    box-shadow: 0 0 1rem rgba(0, 0, 0, 0.519);
-    background-color: rgb(236, 236, 236);
     font-weight: 500;
     cursor: pointer;
+    transition: scale .3s ease;
 }
 
 .color-white {
@@ -88,6 +87,103 @@
 .fairy {
     background-color: #EDB3BC;
 }
+
+.normal_shiny {
+    background: linear-gradient(to right, #A8A876, #D0D67E);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.fire_shiny {
+    background: linear-gradient(to right, #ED8030, #FF9A44);
+    box-shadow: 0 4px 15px rgba(255, 150, 50, 0.5);
+}
+
+.water_shiny {
+    background: linear-gradient(to right, #698FEF, #8BC8FF);
+    color: white;
+    box-shadow: 0 4px 15px rgba(0, 100, 255, 0.5);
+}
+
+.grass_shiny {
+    background: linear-gradient(to right, #7AC757, #B2E2A0);
+    box-shadow: 0 4px 15px rgba(34, 139, 34, 0.5);
+}
+
+.electric_shiny {
+    background: linear-gradient(to right, #F9CE2F, #FFE53B);
+    box-shadow: 0 4px 15px rgba(255, 255, 0, 0.5);
+}
+
+.ice_shiny {
+    background: linear-gradient(to right, #9AD9D8, #B2E5E3);
+    box-shadow: 0 4px 15px rgba(0, 191, 255, 0.5);
+}
+
+.fighting_shiny {
+    background: linear-gradient(to right, #C52E2A, #FF6F61);
+    color: white;
+    box-shadow: 0 4px 15px rgba(255, 0, 0, 0.5);
+}
+
+.poison_shiny {
+    background: linear-gradient(to right, #9E40A0, #D75B8A);
+    color: white;
+    box-shadow: 0 4px 15px rgba(128, 0, 128, 0.5);
+}
+
+.ground_shiny {
+    background: linear-gradient(to right, #DEBD67, #F0D98A);
+    box-shadow: 0 4px 15px rgba(139, 69, 19, 0.5);
+}
+
+.flying_shiny {
+    background: linear-gradient(to right, #A990F1, #D0B5FF);
+    box-shadow: 0 4px 15px rgba(135, 206, 250, 0.5);
+}
+
+.psychic_shiny {
+    background: linear-gradient(to right, #F85888, #FF9FBA);
+    box-shadow: 0 4px 15px rgba(255, 105, 180, 0.5);
+}
+
+.bug_shiny {
+    background: linear-gradient(to right, #AAB821, #C5D94A);
+    box-shadow: 0 4px 15px rgba(100, 255, 100, 0.5);
+}
+
+.rock_shiny {
+    background: linear-gradient(to right, #B5A038, #D9C38E);
+    box-shadow: 0 4px 15px rgba(160, 82, 45, 0.5);
+}
+
+.ghost_shiny {
+    background: linear-gradient(to right, #6D579A, #B49BCC);
+    color: white;
+    box-shadow: 0 4px 15px rgba(128, 0, 128, 0.5);
+}
+
+.dark_shiny {
+    background: linear-gradient(to right, #6E5646, #A88F80);
+    color: white;
+    box-shadow: 0 4px 15px rgba(60, 60, 60, 0.5);
+}
+
+.dragon_shiny {
+    background: linear-gradient(to right, #7139FC, #A77BFF);
+    color: white;
+    box-shadow: 0 4px 15px rgba(138, 43, 226, 0.5);
+}
+
+.steel_shiny {
+    background: linear-gradient(to right, #B8B8D4, #E0E0E9);
+    box-shadow: 0 4px 15px rgba(192, 192, 192, 0.5);
+}
+
+.fairy_shiny {
+    background: linear-gradient(to right, #EDB3BC, #F9D1D6);
+    box-shadow: 0 4px 15px rgba(255, 182, 193, 0.5);
+}
+
 
 .filter:hover {
     scale: 1.1;

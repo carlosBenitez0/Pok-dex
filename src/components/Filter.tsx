@@ -9,10 +9,10 @@ type Props = {
 function Filter({ filterName, filterColor, onClick }: Props) {
   return (
     <div
-      className={`filter ${filterColor}`}
+      className={`filter ${filterColor} shadow-[0_0.4rem_1.5rem_rgba(0,0,0,0.219)] bg-[#ececec]  dark:text-[#0e1217]`}
       onClick={() => onClick(filterName)}
     >
-      <p className="filter-text">{filterName.toUpperCase()}</p>
+      <p className="filter-text">{filterName.split("_")[0].toUpperCase()}</p>
     </div>
   );
 }

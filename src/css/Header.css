@@ -3,7 +3,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.150);
     gap: 2rem;
 }
 
@@ -20,5 +19,6 @@
 .header-top {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 2rem;
 }

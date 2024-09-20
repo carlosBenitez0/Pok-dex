@@ -5,8 +5,6 @@
 }
 
 .card {
-    background-color: white;
-    box-shadow: 0 0 1rem rgba(0, 0, 0, 0.2);
     padding: 2rem;
     border-radius: 1.3rem;
     display: flex;
@@ -41,8 +39,6 @@
     position: absolute;
     font-size: 8rem;
     font-weight: bold;
-    color: rgb(228, 228, 228);
-
 }
 
 .card-body {
@@ -59,13 +55,6 @@
     font-size: 2rem;
     font-weight: bolder;
     background-color: unset;
-}
-
-.poke-info {
-    background-color: rgb(228, 228, 228);
-    padding: .3rem 1rem;
-    border-radius: 50px;
-
 }
 
 .card-body .filter {
