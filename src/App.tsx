@@ -75,8 +75,8 @@ function App() {
             (pokemon) =>
               pokemon &&
               pokemon.types.some(
-                (type: Type) => type.type.name === selectedFilter.split("_")[0]
-              )
+                (type: Type) => type.type.name === selectedFilter.split("_")[0],
+              ),
           );
     return filteredPokemon;
   };
@@ -97,7 +97,7 @@ function App() {
     normalShiny === "NORMAL" ? typeColors : typeColorsShiny;
 
   return (
-    <div className="main-container dark:bg-[#0e1217]">
+    <div className="w-full bg-slate-100 text-[1.6rem] dark:bg-[#0e1217]">
       <Header>
         <div className="header-top">
           <Logo urlLogo="./src/assets/pokédex_logo.png" />
@@ -111,7 +111,7 @@ function App() {
             <ButtonDarkMode />
           </div>
         </div>
-        <div className="filters-container">
+        <div className="flex flex-wrap gap-4">
           {filtersNormalShiny.map((element) => (
             <Filter
               key={element}
@@ -122,7 +122,7 @@ function App() {
           ))}
         </div>
       </Header>
-      <main className="main">
+      <main className="mx-auto w-3/4 p-8 pt-12">
         <div className="cards">
           {filterPokemon().map(
             (pokemon) =>
@@ -142,7 +142,7 @@ function App() {
                   frontBack={frontBack}
                   onFilterClick={handleFilterClick}
                 />
-              )
+              ),
           )}
         </div>
       </main>
