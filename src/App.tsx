@@ -13,15 +13,32 @@ import ButtonDarkMode from "./components/ButtonDarkMode";
 function App() {
   const [pokemonData, setPokemonData] = useState<(IResponse | null)[]>([]);
   const [selectedFilter, setSelectedFilter] = useState<string>("All");
-  const [normalShiny, setNormalShiny] = useState<string>("NORMAL");
-  const [frontBack, setFrontBack] = useState<string>("FRONT");
+
+  const [normalShiny, setNormalShiny] = useState<string>(() => {
+    const normalShinyStorage = window.localStorage.getItem("normalShiny");
+    try {
+      return normalShinyStorage ? JSON.parse(normalShinyStorage) : "NORMAL";
+    } catch (error) {
+      console.error("Error parsing normalShiny from localStorage:", error);
+      return "NORMAL"; // Valor por defecto en caso de error ya que no se puede leer un json que es undefined
+    }
+  });
+
+  const [frontBack, setFrontBack] = useState<string>(() => {
+    const frontBackStorage = window.localStorage.getItem("frontBack");
+    try {
+      return frontBackStorage ? JSON.parse(frontBackStorage) : "FRONT";
+    } catch (error) {
+      console.error("Error parsing frontBack from localStorage:", error);
+      return "FRONT";
+    }
+  });
 
   const getPokemonData = async (id: number): Promise<IResponse | null> => {
     const endPoint: string = `https://pokeapi.co/api/v2/pokemon-form/${id}/`;
     try {
       const response = await axios.get(endPoint);
-      let data = response.data;
-      return data;
+      return response.data;
     } catch (error) {
       console.log(error);
       return null;
@@ -41,6 +58,15 @@ function App() {
     getAllPokemon();
   }, []);
 
+  useEffect(() => {
+    // Actualizar localStorage cuando normalShiny cambie
+    window.localStorage.setItem("normalShiny", JSON.stringify(normalShiny));
+  }, [normalShiny]);
+
+  useEffect(() => {
+    window.localStorage.setItem("frontBack", JSON.stringify(frontBack));
+  }, [frontBack]);
+
   const filterPokemon = () => {
     const filteredPokemon =
       selectedFilter === "All"
@@ -54,20 +80,17 @@ function App() {
           );
     return filteredPokemon;
   };
-  filterPokemon();
 
   const handleFilterClick = (filterName: string) => {
     setSelectedFilter(filterName);
   };
 
   const changeNormalShiny = () => {
-    normalShiny === "NORMAL"
-      ? setNormalShiny("SHINY")
-      : setNormalShiny("NORMAL");
+    setNormalShiny((prev) => (prev === "NORMAL" ? "SHINY" : "NORMAL"));
   };
 
   const changeFrontBack = () => {
-    frontBack === "FRONT" ? setFrontBack("BACK") : setFrontBack("FRONT");
+    setFrontBack((prev) => (prev === "FRONT" ? "BACK" : "FRONT"));
   };
 
   const filtersNormalShiny =
@@ -118,7 +141,7 @@ function App() {
                   normalShiny={normalShiny}
                   frontBack={frontBack}
                   onFilterClick={handleFilterClick}
-                ></Card>
+                />
               )
           )}
         </div>

@@ -7,13 +7,24 @@ type Props = {
 };
 
 const Toggle = ({ onClic, typeOfPokemon }: Props) => {
+  const toggleRef = useRef<HTMLInputElement>(null);
+
+  // Actualizando el estado del input
+  useEffect(() => {
+    if (toggleRef.current) {
+      /* El estado inicial es true porque manejo true si es normal
+      pero el checkbox debe ser false al inicio asi que lo niego */
+      toggleRef.current.checked = typeOfPokemon !== "NORMAL" ? true : false;
+    }
+  }, [typeOfPokemon]);
+
   return (
     <div
       className={`toggle-container ${
         typeOfPokemon === "SHINY" ? "toggle-container-input-checked" : ""
       }`}
     >
-      <input onClick={onClic} type="checkbox" id="switch" />
+      <input onClick={onClic} type="checkbox" id="switch" ref={toggleRef} />
       <label htmlFor="switch"></label>
       <p className={typeOfPokemon !== "SHINY" ? "dark:text-slate-300" : ""}>
         {typeOfPokemon}
@@ -33,6 +44,14 @@ export const ToggleFrontBack = ({
   frontBack,
   normalShiny,
 }: PropsToggleFrontBack) => {
+  const toggleRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (toggleRef.current) {
+      toggleRef.current.checked = frontBack === "FRONT" ? false : true;
+    }
+  }, [frontBack]);
+
   return (
     <div
       className={`toggle-container ${
@@ -44,6 +63,7 @@ export const ToggleFrontBack = ({
         type="checkbox"
         id="frontBack"
         className="peer hidden"
+        ref={toggleRef}
       />
       <label
         htmlFor="frontBack"

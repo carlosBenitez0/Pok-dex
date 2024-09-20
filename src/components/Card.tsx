@@ -90,7 +90,7 @@ function Card({
           <p className="dark:bg-[rgba(107,114,128,0.1)] rounded-full py-1 px-4">
             #{addZeros(id)}
           </p>
-          <p className="poke-info">{name}</p>
+          <p className="poke-info">{name.toUpperCase()}</p>
         </div>
         <div className="card-body-filters">
           {filters.map((filter) => (
