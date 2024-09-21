@@ -1,15 +1,3 @@
-.filter {
-    padding: .5rem 1.5rem;
-    border-radius: 50px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: scale .3s ease;
-}
-
-.color-white {
-    color: white;
-}
-
 .normal {
     background-color: #A8A876;
 }
@@ -182,9 +170,4 @@
 .fairy_shiny {
     background: linear-gradient(to right, #EDB3BC, #F9D1D6);
     box-shadow: 0 4px 15px rgba(255, 182, 193, 0.5);
-}
-
-
-.filter:hover {
-    scale: 1.1;
 }
