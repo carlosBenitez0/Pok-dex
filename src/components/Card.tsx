@@ -1,6 +1,5 @@
 import Filter from "./Filter";
 import { useState, useEffect } from "react";
-import "../css/Card.css";
 import { ToggleCard, ToggleFrontBackCard } from "./Toggle";
 
 type Props = {
@@ -64,16 +63,7 @@ function Card({
   return (
     <div className="flex flex-col gap-4 rounded-[1.3rem] border-2 border-[#d4d4d4] p-8 dark:border-2 dark:border-[#383d47] dark:bg-[#1c1f26] dark:text-slate-300">
       <div className="relative flex items-center justify-center pt-8">
-        {/*      .toggles-card-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    position: absolute;
-    z-index: 10000;
-    top: 0;
-} */}
-        <div className="absolute top-0 z-[1000] flex w-full items-center justify-center">
+        <div className="absolute top-0 z-[1000] flex w-full items-center justify-center gap-8">
           <ToggleCard
             idPokemon={name}
             changeTypeFunction={changeCardType}
@@ -105,7 +95,7 @@ function Card({
           {filters.map((filter) => (
             <Filter
               key={filter}
-              filterColor={filter}
+              filterColor={isNormal ? filter : filter + "_shiny"}
               filterName={filter}
               onClick={() => onFilterClick(filter)}
             />

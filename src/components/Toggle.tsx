@@ -20,13 +20,34 @@ const Toggle = ({ onClic, typeOfPokemon }: Props) => {
 
   return (
     <div
-      className={`toggle-container ${
+      className={`flex items-center gap-2 font-bold ${
         typeOfPokemon === "SHINY" ? "toggle-container-input-checked" : ""
       }`}
     >
-      <input onClick={onClic} type="checkbox" id="switch" ref={toggleRef} />
+      <input
+        onClick={onClic}
+        type="checkbox"
+        id="switch"
+        ref={toggleRef}
+        className="hidden h-0 w-0"
+      />
+      {/*      label {
+    cursor: pointer;
+    text-indent: -9999px;
+    width: 50px;
+    height: 25px;
+    background: var(--charizard-normal-orange);
+    display: flex;
+    align-items: center;
+    border-radius: 100px;
+    position: relative;
+    order: 2;
+} */}
       <label htmlFor="switch"></label>
-      <p className={typeOfPokemon !== "SHINY" ? "dark:text-slate-300" : ""}>
+
+      <p
+        className={`order-1 font-bold ${typeOfPokemon !== "SHINY" ? "dark:text-slate-300" : ""}`}
+      >
         {typeOfPokemon}
       </p>
     </div>
@@ -54,7 +75,7 @@ export const ToggleFrontBack = ({
 
   return (
     <div
-      className={`toggle-container flex items-center ${
+      className={`flex items-center gap-3 ${
         normalShiny === "NORMAL" ? "toggle-back-normal" : "toggle-front-back"
       }`}
     >
@@ -62,14 +83,16 @@ export const ToggleFrontBack = ({
         onClick={onClic}
         type="checkbox"
         id="frontBack"
-        className="peer hidden"
+        className="peer hidden h-0 w-0"
         ref={toggleRef}
       />
       <label
         htmlFor="frontBack"
         className={`flex items-center ${normalShiny === "SHINY" ? "toggleIsShinyLA" : ""}`}
       ></label>
-      <p className="dark:text-slate-300">{frontBack.toUpperCase()}</p>
+      <p className="order-1 font-bold dark:text-slate-300">
+        {frontBack.toUpperCase()}
+      </p>
     </div>
   );
 };
@@ -98,7 +121,7 @@ export const ToggleCard = ({
 
   return (
     <div
-      className={`toggle-container toggle-card ${
+      className={`toggle-card flex gap-3 ${
         !isNormal ? "toggle-container-input-checked" : ""
       }`}
     >
@@ -107,9 +130,10 @@ export const ToggleCard = ({
         onClick={changeTypeFunction}
         type="checkbox"
         id={idPokemon}
+        className="hidden h-0 w-0"
       />
       <label htmlFor={idPokemon}></label>
-      <p>{isNormal ? "NORMAL" : "SHINY"}</p>
+      <p className="order-1 font-bold">{isNormal ? "NORMAL" : "SHINY"}</p>
     </div>
   );
 };
@@ -139,7 +163,7 @@ export const ToggleFrontBackCard = ({
 
   return (
     <div
-      className={`toggle-container toggle-card ${
+      className={`toggle-card flex gap-3 ${
         isNormal === true ? "toggle-back-normal" : "toggle-front-back"
       }`}
     >
@@ -148,12 +172,13 @@ export const ToggleFrontBackCard = ({
         type="checkbox"
         id={idPokemonFront}
         ref={toggleRef}
+        className="hidden h-0 w-0"
       />
       <label
         htmlFor={idPokemonFront}
         className={!isNormal ? "toggleIsShinyLA" : ""}
       ></label>
-      <p>{isFront === true ? "FRONT" : "BACK"}</p>
+      <p className="order-1 font-bold">{isFront === true ? "FRONT" : "BACK"}</p>
     </div>
   );
 };

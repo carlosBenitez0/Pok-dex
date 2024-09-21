@@ -12,30 +12,6 @@
     --metagross-shiny-gold: rgb(248, 208, 48);
 }
 
-.toggle-container {
-    display: flex;
-    gap: .7rem;
-}
-
-.toggles-container {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 2rem;
-}
-
-
-.toggle-container p {
-    font-weight: bold;
-    order: 1;
-}
-
-input[type=checkbox] {
-    height: 0;
-    width: 0;
-    visibility: hidden;
-}
-
 label {
     cursor: pointer;
     text-indent: -9999px;

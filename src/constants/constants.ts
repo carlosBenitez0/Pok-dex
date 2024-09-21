@@ -20,6 +20,36 @@ export const typeColors = [
   "fairy",
 ];
 
+/* export interface TypeColorProperties {
+  bg: string;
+  color?: string;
+}
+
+export interface TypeColorsKey {
+  [key: string]: TypeColorProperties;
+}
+
+export const typeColors: TypeColorsKey = {
+  normal: { bg: "#A8A876" },
+  fire: { bg: "#ED8030" },
+  water: { bg: "#698FEF", color: "white" },
+  grass: { bg: "#7AC757" },
+  electric: { bg: "#F9CE2F" },
+  ice: { bg: "#9AD9D8" },
+  fighting: { bg: "#C52E2A", color: "white" },
+  poison: { bg: "#9E40A0", color: "white" },
+  ground: { bg: "#DEBD67" },
+  flying: { bg: "#A990F1" },
+  psychic: { bg: "#F85888" },
+  bug: { bg: "#AAB821" },
+  rock: { bg: "#B5A038" },
+  ghost: { bg: "#6D579A", color: "white" },
+  dark: { bg: "#6E5646", color: "white" },
+  dragon: { bg: "#7139FC", color: "white" },
+  steel: { bg: "#B8B8D4" },
+  fairy: { bg: "#EDB3BC" },
+}; */
+
 export const typeColorsShiny = [
   "All_shiny",
   "normal_shiny",

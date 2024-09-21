@@ -11,8 +11,8 @@ import { typeColors, typeColorsShiny } from "./constants/constants";
 import ButtonDarkMode from "./components/ButtonDarkMode";
 
 /* TODO:
-  -align NORMAL and SHINY text of header toggle
-  -change color of filters in cards to gradients when user clicks on normalShiny Toggle
+  ------change color of filters in cards to gradients when user clicks on normalShiny Toggle
+  -add shiny mode
 */
 
 function App() {
@@ -106,7 +106,7 @@ function App() {
       <Header>
         <div className="mb-8 flex items-center justify-between gap-8">
           <Logo urlLogo="https://res.cloudinary.com/dc69f3e0o/image/upload/v1726878134/Pokedex/giyntoth5j2dy870vuud.png" />
-          <div className="toggles-container flex">
+          <div className="flex items-center justify-end gap-8">
             <Toggle onClic={changeNormalShiny} typeOfPokemon={normalShiny} />
             <ToggleFrontBack
               onClic={changeFrontBack}
