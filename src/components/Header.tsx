@@ -1,5 +1,4 @@
 import { ReactNode } from "react";
-import "../css/Header.css";
 
 type Props = {
   children: ReactNode;
@@ -7,8 +6,8 @@ type Props = {
 
 function Header({ children }: Props) {
   return (
-    <div className="header-container shadow-xl shadow-slate-500/10">
-      <header className="header">{children}</header>
+    <div className="gap-2rem flex w-full items-center justify-center shadow-xl shadow-slate-500/10">
+      <header className="w-3/4 p-8">{children}</header>
     </div>
   );
 }
@@ -19,7 +18,7 @@ type logoProps = {
 export function Logo({ urlLogo }: logoProps) {
   return (
     <div className="logo-container">
-      <img src={urlLogo} alt="Logo Pokédex" />
+      <img src={urlLogo} alt="Logo Pokédex" className="h-16" />
     </div>
   );
 }

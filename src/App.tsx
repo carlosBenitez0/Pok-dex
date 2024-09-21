@@ -99,8 +99,8 @@ function App() {
   return (
     <div className="w-full bg-slate-100 text-[1.6rem] dark:bg-[#0e1217]">
       <Header>
-        <div className="header-top">
-          <Logo urlLogo="./src/assets/pokédex_logo.png" />
+        <div className="mb-8 flex items-center justify-between gap-8">
+          <Logo urlLogo="https://res.cloudinary.com/dc69f3e0o/image/upload/v1726878134/Pokedex/giyntoth5j2dy870vuud.png" />
           <div className="toggles-container flex">
             <Toggle onClic={changeNormalShiny} typeOfPokemon={normalShiny} />
             <ToggleFrontBack

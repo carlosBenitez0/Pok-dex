@@ -1,31 +1,21 @@
 import { useEffect, useState } from "react";
 
-type Props = {};
-
-function ButtonDarkMode({}: Props) {
-  const [theme, setTheme] = useState<string>(() => {
-    if (window.matchMedia(`(prefers-color-scheme: dark)`).matches) {
+function ButtonDarkMode() {
+  const [currentTheme, setCurrentTheme] = useState<string>(() => {
+    if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
       return "dark";
     }
     return "light";
   });
 
-  const changeTheme = (): void => {
-    setTheme(theme === "light" ? "dark" : "light");
+  const toggleTheme = () => {
+    setCurrentTheme(currentTheme === "light" ? "dark" : "light");
   };
 
-  /* useEffect(() => {
-    theme === "dark"
-      ? document.querySelector(".main-container")?.classList.add("dark")
-      : document.querySelector(".main-container")?.classList.remove("dark");
-  }, [theme]); */
-
-  //Verificar el thema del dispositivo y escuchar los cambios
   useEffect(() => {
     const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-
     const handleThemeChange = (e: MediaQueryListEvent) => {
-      setTheme(e.matches ? "dark" : "light");
+      setCurrentTheme(e.matches ? "dark" : "light");
     };
 
     mediaQuery.addEventListener("change", handleThemeChange);
@@ -36,25 +26,25 @@ function ButtonDarkMode({}: Props) {
   }, []);
 
   useEffect(() => {
-    if (theme === "dark") {
+    if (currentTheme === "dark") {
       document.querySelector("#root")?.classList.add("dark");
     } else {
       document.querySelector("#root")?.classList.remove("dark");
     }
-  }, [theme]);
+  }, [currentTheme]);
 
   return (
     <div
       className="text-gradient-to-r flex cursor-pointer items-center rounded-full bg-[#444444] from-cyan-500 to-blue-500 p-2 hover:bg-[#666666] dark:bg-[#2c3e50] dark:hover:bg-[#2c3e70]"
-      onClick={changeTheme}
+      onClick={toggleTheme}
     >
-      {theme === "light" ? (
+      {currentTheme === "light" ? (
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"
           strokeWidth="1.5"
-          stroke="url(#goldGradient)" // Gradiente dorado
+          stroke="url(#goldGradient)"
           className="size-10"
         >
           <defs>
@@ -62,13 +52,11 @@ function ButtonDarkMode({}: Props) {
               <stop
                 offset="0%"
                 style={{ stopColor: "#FFD700", stopOpacity: 1 }}
-              />{" "}
-              {/* Oro */}
+              />
               <stop
                 offset="100%"
                 style={{ stopColor: "#FFA500", stopOpacity: 1 }}
-              />{" "}
-              {/* Naranja */}
+              />
             </linearGradient>
           </defs>
           <path
@@ -83,7 +71,7 @@ function ButtonDarkMode({}: Props) {
           fill="none"
           viewBox="0 0 24 24"
           strokeWidth="1.5"
-          stroke="url(#blueGradient)" // Gradiente azul
+          stroke="url(#blueGradient)"
           className="size-10"
         >
           <defs>
@@ -91,13 +79,11 @@ function ButtonDarkMode({}: Props) {
               <stop
                 offset="0%"
                 style={{ stopColor: "#1E90FF", stopOpacity: 1 }}
-              />{" "}
-              {/* Azul Dodger */}
+              />
               <stop
                 offset="100%"
                 style={{ stopColor: "#00BFFF", stopOpacity: 1 }}
-              />{" "}
-              {/* Azul Cielo */}
+              />
             </linearGradient>
           </defs>
           <path

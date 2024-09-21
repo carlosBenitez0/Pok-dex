@@ -54,7 +54,7 @@ export const ToggleFrontBack = ({
 
   return (
     <div
-      className={`toggle-container ${
+      className={`toggle-container flex items-center ${
         normalShiny === "NORMAL" ? "toggle-back-normal" : "toggle-front-back"
       }`}
     >
@@ -67,7 +67,7 @@ export const ToggleFrontBack = ({
       />
       <label
         htmlFor="frontBack"
-        className={normalShiny === "SHINY" ? "toggleIsShinyLA" : ""}
+        className={`flex items-center ${normalShiny === "SHINY" ? "toggleIsShinyLA" : ""}`}
       ></label>
       <p className="dark:text-slate-300">{frontBack.toUpperCase()}</p>
     </div>
