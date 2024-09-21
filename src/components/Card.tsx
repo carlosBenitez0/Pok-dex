@@ -62,9 +62,18 @@ function Card({
   };
 
   return (
-    <div className="card border-2 border-[#d4d4d4] dark:border-2 dark:border-[#383d47] dark:bg-[#1c1f26] dark:text-slate-300">
-      <div className="card-header">
-        <div className="toggles-card-container">
+    <div className="flex flex-col gap-4 rounded-[1.3rem] border-2 border-[#d4d4d4] p-8 dark:border-2 dark:border-[#383d47] dark:bg-[#1c1f26] dark:text-slate-300">
+      <div className="relative flex items-center justify-center pt-8">
+        {/*      .toggles-card-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    position: absolute;
+    z-index: 10000;
+    top: 0;
+} */}
+        <div className="absolute top-0 z-[1000] flex w-full items-center justify-center">
           <ToggleCard
             idPokemon={name}
             changeTypeFunction={changeCardType}
@@ -77,22 +86,22 @@ function Card({
             idPokemonFront={name + "_fb"}
           />
         </div>
-        <p className="poke-id-bg text-gray-300 dark:text-gray-300 dark:opacity-10">
+
+        <p className="absolute text-[8rem] font-bold text-gray-300 dark:text-gray-300 dark:opacity-10">
           #{addZeros(id)}
         </p>
-        <img src={getSelectedImage()} alt={name} />
+        <img src={getSelectedImage()} alt={name} className="z-10" />
       </div>
-      <div className="card-body">
-        <div className="card-body-info">
-          {/* background-color: rgb(228, 228, 228);
-    padding: .3rem 1rem;
-    border-radius: 50px; */}
-          <p className="rounded-full px-4 py-1 dark:bg-[rgba(107,114,128,0.1)]">
+
+      <div className="flex flex-col gap-4">
+        <div className="flex items-center justify-center gap-4">
+          <p className="w-fit rounded-full bg-[rgba(107,114,128,0.1)] px-4 py-3 font-medium">
             #{addZeros(id)}
           </p>
-          <p className="poke-info">{name.toUpperCase()}</p>
+          <p className="text-3xl font-bold">{name.toUpperCase()}</p>
         </div>
-        <div className="card-body-filters">
+
+        <div className="flex items-center justify-center gap-4">
           {filters.map((filter) => (
             <Filter
               key={filter}

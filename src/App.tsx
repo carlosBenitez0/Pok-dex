@@ -10,6 +10,11 @@ import { IResponse, Type } from "./interfaces/IResponse";
 import { typeColors, typeColorsShiny } from "./constants/constants";
 import ButtonDarkMode from "./components/ButtonDarkMode";
 
+/* TODO:
+  -align NORMAL and SHINY text of header toggle
+  -change color of filters in cards to gradients when user clicks on normalShiny Toggle
+*/
+
 function App() {
   const [pokemonData, setPokemonData] = useState<(IResponse | null)[]>([]);
   const [selectedFilter, setSelectedFilter] = useState<string>("All");
@@ -97,7 +102,7 @@ function App() {
     normalShiny === "NORMAL" ? typeColors : typeColorsShiny;
 
   return (
-    <div className="w-full bg-slate-100 text-[1.6rem] dark:bg-[#0e1217]">
+    <div className="min-h-screen w-full bg-slate-100 text-[1.6rem] dark:bg-[#0e1217]">
       <Header>
         <div className="mb-8 flex items-center justify-between gap-8">
           <Logo urlLogo="https://res.cloudinary.com/dc69f3e0o/image/upload/v1726878134/Pokedex/giyntoth5j2dy870vuud.png" />
@@ -123,7 +128,7 @@ function App() {
         </div>
       </Header>
       <main className="mx-auto w-3/4 p-8 pt-12">
-        <div className="cards">
+        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3">
           {filterPokemon().map(
             (pokemon) =>
               pokemon && (
