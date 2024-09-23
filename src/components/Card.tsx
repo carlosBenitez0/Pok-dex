@@ -63,7 +63,7 @@ function Card({
   return (
     <div className="flex flex-col gap-4 rounded-[1.3rem] border-2 border-[#d4d4d4] p-8 dark:border-2 dark:border-[#383d47] dark:bg-[#1c1f26] dark:text-slate-300">
       <div className="relative flex items-center justify-center pt-8">
-        <div className="absolute top-0 z-[1000] flex w-full items-center justify-center gap-8">
+        <div className="absolute top-0 z-[1000] flex w-full items-center justify-center gap-4">
           <ToggleCard
             idPokemon={name}
             changeTypeFunction={changeCardType}

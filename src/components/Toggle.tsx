@@ -21,7 +21,9 @@ const Toggle = ({ onClic, typeOfPokemon }: Props) => {
   return (
     <div
       className={`flex items-center gap-2 font-bold ${
-        typeOfPokemon === "SHINY" ? "toggle-container-input-checked" : ""
+        typeOfPokemon === "SHINY"
+          ? "bg-gradient-to-r from-[#36403E] to-[#F04038] bg-clip-text text-transparent"
+          : ""
       }`}
     >
       <input
@@ -43,7 +45,30 @@ const Toggle = ({ onClic, typeOfPokemon }: Props) => {
     position: relative;
     order: 2;
 } */}
-      <label htmlFor="switch"></label>
+      {/* label:after {
+    content: '';
+    position: absolute;
+    top: 7px;
+    left: 5px;
+    width: 20px;
+    height: 10px;
+    background: #fff;
+    border-radius: 90px;
+} */}
+      {/* input:checked+label:after {
+    left: calc(100% - 5px);
+    transform: translateX(-100%);
+    background-image: linear-gradient(to right, var(--metagross-normal-gray-blue), var(--metagross-shiny-silver));
+}
+ */}
+      <label
+        htmlFor="switch"
+        className={`after:top-2/7 relative order-2 flex h-6 w-[50px] cursor-pointer items-center rounded-full bg-orange-500 indent-[-9999px] shadow-[0_0_.5rem_0_rgba(255,215,0,.5)] after:absolute after:left-2 after:h-3 after:w-8 after:rounded-full after:bg-white after:content-[''] dark:shadow-[0_0_1rem_0_rgba(0,0,255,1)] ${
+          typeOfPokemon === "SHINY"
+            ? "bg-gradient-to-r from-[#36403E] to-[#F04038]"
+            : ""
+        } ${toggleRef.current?.checked ? "after:left-[calc(100%-0.5rem)] after:translate-x-[-100%] after:bg-gradient-to-r after:from-[#70888C] after:to-[#B8B8D0]" : ""}`}
+      ></label>
 
       <p
         className={`order-1 font-bold ${typeOfPokemon !== "SHINY" ? "dark:text-slate-300" : ""}`}
@@ -74,11 +99,7 @@ export const ToggleFrontBack = ({
   }, [frontBack]);
 
   return (
-    <div
-      className={`flex items-center gap-3 ${
-        normalShiny === "NORMAL" ? "toggle-back-normal" : "toggle-front-back"
-      }`}
-    >
+    <div className={`flex items-center gap-3`}>
       <input
         onClick={onClic}
         type="checkbox"
@@ -86,11 +107,27 @@ export const ToggleFrontBack = ({
         className="peer hidden h-0 w-0"
         ref={toggleRef}
       />
+      {/* .toggle-front-back label {
+    background-color: green;
+    background: linear-gradient(to right, var(--charizard-shiny-red), var(--metagross-shiny-gold));
+} */}
+      {/**.toggle-front-back input~p {
+    color: transparent;
+    background: linear-gradient(to right, var(--charizard-shiny-red), var(--metagross-shiny-gold));
+    background-clip: text;
+    
+  <!-- contenido -->
+</div>
+}
+ */}
       <label
         htmlFor="frontBack"
-        className={`flex items-center ${normalShiny === "SHINY" ? "toggleIsShinyLA" : ""}`}
+        className={`relative order-2 flex h-6 w-[50px] cursor-pointer items-center rounded-full bg-green-600 indent-[-9999px] shadow-[0_0_.5rem_0_rgba(255,215,0,.5)] after:absolute after:left-2 after:h-3 after:w-8 after:rounded-full after:bg-white after:content-[''] dark:shadow-[0_0_1rem_0_rgba(0,0,255,1)] ${normalShiny !== "NORMAL" ? "dark:shadow-[0_0_1rem_0_rgba bg-gradient-to-r from-[#F04038] to-[#F8D030] after:bg-gradient-to-r after:from-[#70888C] after:to-[#B8B8D0]" : ""} ${toggleRef.current?.checked ? "after:left-[calc(100%-0.5rem)] after:translate-x-[-100%]" : ""}`}
       ></label>
-      <p className="order-1 font-bold dark:text-slate-300">
+
+      <p
+        className={`order-1 font-bold ${normalShiny !== "NORMAL" ? "bg-gradient-to-r from-[#F04038] to-[#F8D030] bg-clip-text text-transparent" : "dark:text-slate-300"}`}
+      >
         {frontBack.toUpperCase()}
       </p>
     </div>
@@ -122,7 +159,9 @@ export const ToggleCard = ({
   return (
     <div
       className={`toggle-card flex gap-3 ${
-        !isNormal ? "toggle-container-input-checked" : ""
+        !isNormal
+          ? "bg-gradient-to-r from-[#36403E] to-[#F04038] bg-clip-text text-transparent"
+          : ""
       }`}
     >
       <input
@@ -132,7 +171,28 @@ export const ToggleCard = ({
         id={idPokemon}
         className="hidden h-0 w-0"
       />
-      <label htmlFor={idPokemon}></label>
+      {/* label:after {
+    content: '';
+    position: absolute;
+    top: 7px;
+    left: 5px;
+    width: 20px;
+    height: 10px;
+    background: #fff;
+    border-radius: 90px;
+} */}
+
+      {/* TODO: APLY THE STYLES AT THE BOTTOM OF THIS COMENTARY */}
+      {/* .toggle-card label:after {
+    top: 2px;
+    left: 5px;
+    width: 10px;
+    height: 10px;
+} */}
+      <label
+        htmlFor={idPokemon}
+        className={`relative order-2 flex h-6 w-20 cursor-pointer items-center rounded-full bg-orange-500 indent-[-9999px] after:absolute after:left-2 after:h-3 after:w-8 after:rounded-full after:bg-white after:content-[''] ${!isNormal ? "bg-gradient-to-r from-[#36403E] to-[#F04038] shadow-[0_0_1rem_0_rgba(0,0,255,1)] after:left-[calc(100%-0.5rem)] after:translate-x-[-100%] after:bg-gradient-to-r after:from-[#70888C] after:to-[#B8B8D0]" : ""} `}
+      ></label>
       <p className="order-1 font-bold">{isNormal ? "NORMAL" : "SHINY"}</p>
     </div>
   );
@@ -162,11 +222,7 @@ export const ToggleFrontBackCard = ({
   }, [isFront]);
 
   return (
-    <div
-      className={`toggle-card flex gap-3 ${
-        isNormal === true ? "toggle-back-normal" : "toggle-front-back"
-      }`}
-    >
+    <div className={`toggle-card flex gap-3`}>
       <input
         onClick={changeFrontFunction}
         type="checkbox"
@@ -174,11 +230,16 @@ export const ToggleFrontBackCard = ({
         ref={toggleRef}
         className="hidden h-0 w-0"
       />
+
       <label
         htmlFor={idPokemonFront}
-        className={!isNormal ? "toggleIsShinyLA" : ""}
+        className={`relative order-2 flex h-6 w-[50px] cursor-pointer items-center rounded-full bg-green-600 indent-[-9999px] after:absolute after:left-2 after:h-3 after:w-8 after:rounded-full after:bg-white after:content-[''] ${!isFront ? "after:left-[calc(100%-0.5rem)] after:translate-x-[-100%]" : ""} ${!isNormal ? "bg-gradient-to-r from-[#F04038] to-[#F8D030] shadow-[0_0_1rem_0_rgba(0,0,255,1)] after:bg-gradient-to-r after:from-[#70888C] after:to-[#B8B8D0]" : ""} `}
       ></label>
-      <p className="order-1 font-bold">{isFront === true ? "FRONT" : "BACK"}</p>
+      <p
+        className={`order-1 font-bold ${!isNormal ? "bg-gradient-to-r from-[#F04038] to-[#F8D030] bg-clip-text text-transparent" : ""}`}
+      >
+        {isFront === true ? "FRONT" : "BACK"}
+      </p>
     </div>
   );
 };
