@@ -7,6 +7,7 @@ type Props = {
   image: ImageType;
   name: string;
   filters: string[];
+  selectedFilter: string;
   onFilterClick: (filter: string) => void;
   normalShiny: string; // 'NORMAL' o 'SHINY'
   frontBack: string; // 'FRONT' o 'BACK'
@@ -24,6 +25,7 @@ function Card({
   image,
   name,
   filters,
+  selectedFilter,
   onFilterClick,
   normalShiny,
   frontBack,
@@ -95,6 +97,7 @@ function Card({
           {filters.map((filter) => (
             <Filter
               key={filter}
+              selectedFilter={selectedFilter}
               filterColor={isNormal ? filter : filter + "_shiny"}
               filterName={filter}
               onClick={() => onFilterClick(filter)}

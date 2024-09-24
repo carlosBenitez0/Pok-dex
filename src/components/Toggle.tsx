@@ -69,7 +69,11 @@ const Toggle = ({ onClic, typeOfPokemon }: Props) => {
           typeOfPokemon === "SHINY"
             ? "bg-gradient-to-r from-charizard-shiny-red to-charizard-shiny-black"
             : ""
-        } ${toggleRef.current?.checked ? "after:left-[calc(100%-0.5rem)] after:translate-x-[-100%] after:bg-gradient-to-r after:from-metagross-normal-gray-blue after:to-metagross-shiny-silver" : ""}`}
+        } ${
+          toggleRef.current?.checked
+            ? "after:left-[calc(100%-0.5rem)] after:translate-x-[-100%] after:bg-gradient-to-r after:from-metagross-normal-gray-blue after:to-metagross-shiny-silver"
+            : ""
+        }`}
       ></label>
 
       <p

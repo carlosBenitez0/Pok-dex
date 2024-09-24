@@ -10,17 +10,22 @@ import { IResponse, Type } from "./interfaces/IResponse";
 import { typeColors, typeColorsShiny } from "./constants/constants";
 import ButtonDarkMode from "./components/ButtonDarkMode";
 
-/* TODO:
-  ------change color of filters in cards to gradients when user clicks on normalShiny Toggle
-  -add shiny mode
-*/
-
 function App() {
   const [pokemonData, setPokemonData] = useState<(IResponse | null)[]>([]);
-  const [selectedFilter, setSelectedFilter] = useState<string>("All");
+
+  const [selectedFilter, setSelectedFilter] = useState<string>(() => {
+    const selectedFilterStorage = window.localStorage.getItem("selectedFilter");
+    try {
+      return selectedFilterStorage ? JSON.parse(selectedFilterStorage) : "All";
+    } catch (error) {
+      console.error("Error parsing selectedFilter from localStorage:", error);
+      return "All"; // Valor por defecto en caso de error ya que no se puede leer un json que es undefined
+    }
+  });
 
   const [normalShiny, setNormalShiny] = useState<string>(() => {
     const normalShinyStorage = window.localStorage.getItem("normalShiny");
+    console.log(normalShinyStorage);
     try {
       return normalShinyStorage ? JSON.parse(normalShinyStorage) : "NORMAL";
     } catch (error) {
@@ -88,6 +93,7 @@ function App() {
 
   const handleFilterClick = (filterName: string) => {
     setSelectedFilter(filterName);
+    window.localStorage.setItem("selectedFilter", JSON.stringify(filterName));
   };
 
   const changeNormalShiny = () => {
@@ -122,6 +128,7 @@ function App() {
               key={element}
               filterName={element}
               filterColor={element}
+              selectedFilter={selectedFilter}
               onClick={handleFilterClick}
             />
           ))}
@@ -142,6 +149,7 @@ function App() {
                     shiny_b: pokemon.sprites.back_shiny,
                   }}
                   name={pokemon.name}
+                  selectedFilter={selectedFilter}
                   filters={pokemon.types.map((type: Type) => type.type.name)}
                   normalShiny={normalShiny}
                   frontBack={frontBack}
