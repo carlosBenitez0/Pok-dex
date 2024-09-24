@@ -2,11 +2,14 @@ import { ReactNode } from "react";
 
 type Props = {
   children: ReactNode;
+  normalShiny: string;
 };
 
-function Header({ children }: Props) {
+function Header({ children, normalShiny }: Props) {
   return (
-    <div className="gap-2rem flex w-full items-center justify-center shadow-xl shadow-slate-500/10">
+    <div
+      className={`z-10 flex w-full items-center justify-center ${normalShiny !== "SHINY" ? "shadow-xl shadow-slate-500/10" : ""}`}
+    >
       <header className="w-3/4 p-8">{children}</header>
     </div>
   );

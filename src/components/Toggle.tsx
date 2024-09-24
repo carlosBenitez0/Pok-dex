@@ -6,8 +6,6 @@ type Props = {
   typeOfPokemon: string;
 };
 
-//TODO: add transitions in all the toggles
-
 const Toggle = ({ onClic, typeOfPokemon }: Props) => {
   const toggleRef = useRef<HTMLInputElement>(null);
 
@@ -35,34 +33,7 @@ const Toggle = ({ onClic, typeOfPokemon }: Props) => {
         ref={toggleRef}
         className="hidden h-0 w-0"
       />
-      {/*      label {
-    cursor: pointer;
-    text-indent: -9999px;
-    width: 50px;
-    height: 25px;
-    background: var(--charizard-normal-orange);
-    display: flex;
-    align-items: center;
-    border-radius: 100px;
-    position: relative;
-    order: 2;
-} */}
-      {/* label:after {
-    content: '';
-    position: absolute;
-    top: 7px;
-    left: 5px;
-    width: 20px;
-    height: 10px;
-    background: #fff;
-    border-radius: 90px;
-} */}
-      {/* input:checked+label:after {
-    left: calc(100% - 5px);
-    transform: translateX(-100%);
-    background-image: linear-gradient(to right, var(--metagross-normal-gray-blue), var(--metagross-shiny-silver));
-}
- */}
+
       <label
         htmlFor="switch"
         className={`after:top-2/7 relative order-2 flex h-6 w-[50px] cursor-pointer items-center rounded-full bg-orange-500 indent-[-9999px] shadow-[0_0_.5rem_0_rgba(255,215,0,.5)] after:absolute after:left-2 after:h-3 after:w-8 after:rounded-full after:bg-white after:content-[''] dark:shadow-[0_0_1rem_0_rgba(0,0,255,1)] ${
@@ -113,19 +84,7 @@ export const ToggleFrontBack = ({
         className="peer hidden h-0 w-0"
         ref={toggleRef}
       />
-      {/* .toggle-front-back label {
-    background-color: green;
-    background: linear-gradient(to right, var(--charizard-shiny-red), var(--metagross-shiny-gold));
-} */}
-      {/**.toggle-front-back input~p {
-    color: transparent;
-    background: linear-gradient(to right, var(--charizard-shiny-red), var(--metagross-shiny-gold));
-    background-clip: text;
-    
-  <!-- contenido -->
-</div>
-}
- */}
+
       <label
         htmlFor="frontBack"
         className={`relative order-2 flex h-6 w-[50px] cursor-pointer items-center rounded-full bg-green-600 indent-[-9999px] shadow-[0_0_.5rem_0_rgba(255,215,0,.5)] after:absolute after:left-2 after:h-3 after:w-8 after:rounded-full after:bg-white after:content-[''] dark:shadow-[0_0_1rem_0_rgba(0,0,255,1)] ${normalShiny !== "NORMAL" ? "dark:shadow-[0_0_1rem_0_rgba bg-gradient-to-r from-charizard-shiny-red to-metagross-shiny-gold after:bg-gradient-to-r after:from-metagross-normal-gray-blue after:to-metagross-shiny-silver" : ""} ${toggleRef.current?.checked ? "after:left-[calc(100%-0.5rem)] after:translate-x-[-100%]" : ""}`}
@@ -177,24 +136,6 @@ export const ToggleCard = ({
         id={idPokemon}
         className="hidden h-0 w-0"
       />
-      {/* label:after {
-    content: '';
-    position: absolute;
-    top: 7px;
-    left: 5px;
-    width: 20px;
-    height: 10px;
-    background: #fff;
-    border-radius: 90px;
-} */}
-
-      {/* TODO: APLY THE STYLES AT THE BOTTOM OF THIS COMENTARY */}
-      {/* .toggle-card label:after {
-    top: 2px;
-    left: 5px;
-    width: 10px;
-    height: 10px;
-} */}
       <label
         htmlFor={idPokemon}
         className={`relative order-2 flex h-6 w-20 cursor-pointer items-center rounded-full bg-orange-500 indent-[-9999px] after:absolute after:left-2 after:h-3 after:w-8 after:rounded-full after:bg-white after:content-[''] ${!isNormal ? "bg-gradient-to-r from-charizard-shiny-black to-charizard-shiny-red shadow-[0_0_1rem_0_rgba(0,0,255,1)] after:left-[calc(100%-0.5rem)] after:translate-x-[-100%] after:bg-gradient-to-r after:from-metagross-normal-gray-blue after:to-metagross-shiny-silver" : ""} `}

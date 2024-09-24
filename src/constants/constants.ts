@@ -14,7 +14,6 @@ export const typeColors = [
   "bug",
   "rock",
   "ghost",
-  "dark",
   "dragon",
   "steel",
   "fairy",
@@ -51,7 +50,7 @@ export const typeColors: TypeColorsKey = {
 }; */
 
 export const typeColorsShiny = [
-  "All_shiny",
+  "All",
   "normal_shiny",
   "fire_shiny",
   "water_shiny",
@@ -66,8 +65,8 @@ export const typeColorsShiny = [
   "bug_shiny",
   "rock_shiny",
   "ghost_shiny",
-  "dark_shiny",
   "dragon_shiny",
   "steel_shiny",
   "fairy_shiny",
+  "quit_shiny",
 ];

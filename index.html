@@ -11,10 +11,17 @@
 
   <title>Pokédex</title>
 </head>
+<style>
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+</style>
 
-<body class="text-base font-poppins">
-  <div id="root"></div>
+
+<body class="text-base font-poppins overflow-auto h-full no-scrollbar">
+  <div id="root" class="h-full"></div>
   <script type="module" src="/src/main.tsx"></script>
 </body>
+
 
 </html>

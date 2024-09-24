@@ -1,3 +1,7 @@
+.filter {
+    box-sizing: border-box;
+}
+
 .normal {
     background-color: #A8A876;
 }
