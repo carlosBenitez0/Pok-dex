@@ -10,7 +10,9 @@ import { IResponse, Type } from "./interfaces/IResponse";
 import { typeColors, typeColorsShiny } from "./constants/constants";
 import ButtonDarkMode from "./components/ButtonDarkMode";
 import ToggleFrontBack from "./components/toggles/ToggleFrontBack";
+// custom hooks
 import { useNormalShiny } from "./hooks/useNormalShiny";
+import { useFrontBack } from "./hooks/useFrontBack";
 
 function App() {
   const [pokemonData, setPokemonData] = useState<(IResponse | null)[]>([]);
@@ -26,17 +28,7 @@ function App() {
   });
 
   const { normalShiny, changeNormalShiny } = useNormalShiny();
-
-  const [frontBack, setFrontBack] = useState<string>(() => {
-    const frontBackStorage = window.localStorage.getItem("frontBack");
-    try {
-      return frontBackStorage ? JSON.parse(frontBackStorage) : "FRONT";
-    } catch (error) {
-      console.error("Error parsing frontBack from localStorage:", error);
-      return "FRONT";
-    }
-  });
-
+  const { frontBack, changeFrontBack } = useFrontBack();
   const getPokemonData = async (id: number): Promise<IResponse | null> => {
     const endPoint: string = `https://pokeapi.co/api/v2/pokemon-form/${id}/`;
     try {
@@ -61,10 +53,6 @@ function App() {
     getAllPokemon();
   }, []);
 
-  useEffect(() => {
-    window.localStorage.setItem("frontBack", JSON.stringify(frontBack));
-  }, [frontBack]);
-
   const filterPokemon = () => {
     const filteredPokemon =
       selectedFilter === "All"
@@ -82,10 +70,6 @@ function App() {
   const handleFilterClick = (filterName: string) => {
     setSelectedFilter(filterName);
     window.localStorage.setItem("selectedFilter", JSON.stringify(filterName));
-  };
-
-  const changeFrontBack = () => {
-    setFrontBack((prev) => (prev === "FRONT" ? "BACK" : "FRONT"));
   };
 
   const filtersNormalShiny =
