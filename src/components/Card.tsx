@@ -1,6 +1,7 @@
 import Filter from "./Filter";
 import { useState, useEffect } from "react";
-import { ToggleCard, ToggleFrontBackCard } from "./Toggle";
+import ToggleCard from "./toggles/ToggleCard";
+import ToggleFrontBackCard from "./toggles/ToggleFrontBackCard";
 
 type Props = {
   id: number;

@@ -3,12 +3,14 @@ import "./App.css";
 import Header, { Logo } from "./components/Header";
 import Filter from "./components/Filter";
 import Card from "./components/Card";
-import Toggle, { ToggleFrontBack } from "./components/Toggle";
+import Toggle from "./components/toggles/Toggle";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { IResponse, Type } from "./interfaces/IResponse";
 import { typeColors, typeColorsShiny } from "./constants/constants";
 import ButtonDarkMode from "./components/ButtonDarkMode";
+import ToggleFrontBack from "./components/toggles/ToggleFrontBack";
+import { useNormalShiny } from "./hooks/useNormalShiny";
 
 function App() {
   const [pokemonData, setPokemonData] = useState<(IResponse | null)[]>([]);
@@ -23,16 +25,7 @@ function App() {
     }
   });
 
-  const [normalShiny, setNormalShiny] = useState<string>(() => {
-    const normalShinyStorage = window.localStorage.getItem("normalShiny");
-    console.log(normalShinyStorage);
-    try {
-      return normalShinyStorage ? JSON.parse(normalShinyStorage) : "NORMAL";
-    } catch (error) {
-      console.error("Error parsing normalShiny from localStorage:", error);
-      return "NORMAL"; // Valor por defecto en caso de error ya que no se puede leer un json que es undefined
-    }
-  });
+  const { normalShiny, changeNormalShiny } = useNormalShiny();
 
   const [frontBack, setFrontBack] = useState<string>(() => {
     const frontBackStorage = window.localStorage.getItem("frontBack");
@@ -69,11 +62,6 @@ function App() {
   }, []);
 
   useEffect(() => {
-    // Actualizar localStorage cuando normalShiny cambie
-    window.localStorage.setItem("normalShiny", JSON.stringify(normalShiny));
-  }, [normalShiny]);
-
-  useEffect(() => {
     window.localStorage.setItem("frontBack", JSON.stringify(frontBack));
   }, [frontBack]);
 
@@ -96,10 +84,6 @@ function App() {
     window.localStorage.setItem("selectedFilter", JSON.stringify(filterName));
   };
 
-  const changeNormalShiny = () => {
-    setNormalShiny((prev) => (prev === "NORMAL" ? "SHINY" : "NORMAL"));
-  };
-
   const changeFrontBack = () => {
     setFrontBack((prev) => (prev === "FRONT" ? "BACK" : "FRONT"));
   };
@@ -116,8 +100,8 @@ function App() {
             id="myVideo"
             className="h-full w-full object-cover"
             autoPlay
+            muted
             loop
-            playsInline
           >
             <source
               src="https://res.cloudinary.com/dc69f3e0o/video/upload/v1727183826/Pokedex/a2llxdijettw42fkkceh.mp4"
