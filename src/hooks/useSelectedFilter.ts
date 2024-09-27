@@ -1,5 +1,9 @@
 import { useState } from "react";
-export const useSeelectedFilter = () => {
+import { usePokemonData } from "./usePokemonData";
+import { Type } from "../interfaces/IResponse";
+
+export const useSelectedFilter = () => {
+  const { pokemonData } = usePokemonData();
   const [selectedFilter, setSelectedFilter] = useState<string>(() => {
     const selectedFilterStorage = window.localStorage.getItem("selectedFilter");
     try {

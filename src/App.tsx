@@ -4,46 +4,20 @@ import Header, { Logo } from "./components/Header";
 import Filter from "./components/Filter";
 import Card from "./components/Card";
 import Toggle from "./components/toggles/Toggle";
-import axios from "axios";
-import { useEffect, useState } from "react";
-import { IResponse, Type } from "./interfaces/IResponse";
+import { Type } from "./interfaces/IResponse";
 import ButtonDarkMode from "./components/ButtonDarkMode";
 import ToggleFrontBack from "./components/toggles/ToggleFrontBack";
 // custom hooks
 import { useNormalShiny } from "./hooks/useNormalShiny";
 import { useFrontBack } from "./hooks/useFrontBack";
-import { useSeelectedFilter } from "./hooks/useSeelectedFilter";
+import { useSelectedFilter } from "./hooks/useSelectedFilter";
 
 function App() {
-  const [pokemonData, setPokemonData] = useState<(IResponse | null)[]>([]);
-  const { selectedFilter, handleFilterClick } = useSeelectedFilter();
+  const { selectedFilter, handleFilterClick, filterPokemon } =
+    useSelectedFilter();
   const { normalShiny, changeNormalShiny, filtersNormalShiny } =
     useNormalShiny();
   const { frontBack, changeFrontBack } = useFrontBack();
-
-  const getPokemonData = async (id: number): Promise<IResponse | null> => {
-    const endPoint: string = `https://pokeapi.co/api/v2/pokemon-form/${id}/`;
-    try {
-      const response = await axios.get(endPoint);
-      return response.data;
-    } catch (error) {
-      console.log(error);
-      return null;
-    }
-  };
-
-  useEffect(() => {
-    const getAllPokemon = async (): Promise<void> => {
-      const promises = [];
-      for (let i = 1; i <= 151; i++) {
-        promises.push(getPokemonData(i));
-      }
-      const results = await Promise.all(promises);
-      setPokemonData(results);
-    };
-
-    getAllPokemon();
-  }, []);
 
   return (
     <div className="relative min-h-screen w-full bg-slate-100 text-[1.6rem] dark:bg-[#0e1217]">
