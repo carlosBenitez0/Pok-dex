@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { typeColors, typeColorsShiny } from "../constants/constants";
 
 export const useNormalShiny = () => {
   const [normalShiny, setNormalShiny] = useState<string>(() => {
@@ -21,5 +22,8 @@ export const useNormalShiny = () => {
     setNormalShiny((prev) => (prev === "NORMAL" ? "SHINY" : "NORMAL"));
   };
 
-  return { normalShiny, changeNormalShiny };
+  const filtersNormalShiny =
+    normalShiny === "NORMAL" ? typeColors : typeColorsShiny;
+
+  return { normalShiny, changeNormalShiny, filtersNormalShiny };
 };
