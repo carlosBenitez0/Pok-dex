@@ -68,5 +68,4 @@ export const typeColorsShiny = [
   "dragon_shiny",
   "steel_shiny",
   "fairy_shiny",
-  "quit_shiny",
 ];

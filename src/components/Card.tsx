@@ -65,7 +65,7 @@ function Card({
 
   return (
     <div
-      className={`flex flex-col gap-4 rounded-[1.3rem] border-2 border-[#d4d4d4] p-8 dark:border-2 dark:border-[#383d47] dark:text-slate-300 ${normalShiny === "SHINY" ? "backdrop-blur-md dark:border-[#d4d4d4] dark:backdrop-blur-md" : "dark:bg-[#1c1f26]"} `}
+      className={`flex flex-col gap-4 rounded-[1.3rem] border-2 border-[#d4d4d4] p-8 dark:border-2 dark:border-[#383d47] dark:text-slate-300 ${normalShiny === "SHINY" ? "border-black backdrop-blur-md dark:border-[#d4d4d4] dark:backdrop-blur-md" : "dark:bg-[#1c1f26]"} `}
     >
       <div className="relative flex items-center justify-center pt-8">
         <div className="absolute top-0 z-[1000] flex w-full items-center justify-center gap-4">
@@ -83,7 +83,7 @@ function Card({
         </div>
 
         <p
-          className={`absolute text-[8rem] font-bold text-gray-300 ${normalShiny !== "SHINY" ? "dark:opacity-10" : ""}`}
+          className={`absolute text-9xl font-bold text-gray-300 ${normalShiny !== "SHINY" ? "dark:opacity-10" : "bg-gradient-to-r from-white to-gray-800 bg-clip-text text-transparent text-shadow-xl dark:bg-gradient-to-l"} `}
         >
           #{addZeros(id)}
         </p>
@@ -93,12 +93,12 @@ function Card({
       <div className="flex flex-col gap-4">
         <div className="flex items-center justify-center gap-4">
           <p
-            className={`w-fit rounded-full bg-[rgba(107,114,128,0.1)] px-4 py-3 font-medium ${normalShiny === "SHINY" ? "dark:text-black" : ""}`}
+            className={`w-fit rounded-full bg-[rgba(107,114,128,0.1)] px-4 py-3 font-medium ${normalShiny === "SHINY" ? "bg-black text-gray-200 shadow-md shadow-slate-800 text-shadow-xl dark:bg-gray-300 dark:text-black dark:shadow-slate-500" : ""}`}
           >
             #{addZeros(id)}
           </p>
           <p
-            className={`text-3xl font-bold ${normalShiny === "SHINY" ? "dark:text-black" : ""}`}
+            className={`text-3xl font-bold ${normalShiny === "SHINY" ? "text-shadow-xl dark:text-gray-300" : ""}`}
           >
             {name.toUpperCase()}
           </p>

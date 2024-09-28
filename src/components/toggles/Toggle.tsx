@@ -35,9 +35,9 @@ const Toggle = ({ onClic, typeOfPokemon }: Props) => {
 
       <label
         htmlFor="switch"
-        className={`after:top-2/7 relative order-2 flex h-6 w-[50px] cursor-pointer items-center rounded-full bg-orange-500 indent-[-9999px] shadow-[0_0_.5rem_0_rgba(255,215,0,.5)] after:absolute after:left-2 after:h-3 after:w-8 after:rounded-full after:bg-white after:content-[''] dark:shadow-[0_0_1rem_0_rgba(0,0,255,1)] ${
+        className={`after:top-2/7 relative order-2 flex h-6 w-[50px] cursor-pointer items-center rounded-full bg-orange-500 indent-[-9999px] shadow-md after:absolute after:left-2 after:h-3 after:w-8 after:rounded-full after:bg-white after:content-[''] ${
           typeOfPokemon === "SHINY"
-            ? "bg-gradient-to-r from-charizard-shiny-red to-charizard-shiny-black"
+            ? "bg-gradient-to-r from-charizard-shiny-red to-charizard-shiny-black shadow-md shadow-slate-800"
             : ""
         } ${
           toggleRef.current?.checked
@@ -47,7 +47,7 @@ const Toggle = ({ onClic, typeOfPokemon }: Props) => {
       ></label>
 
       <p
-        className={`order-1 font-bold ${typeOfPokemon !== "SHINY" ? "dark:text-slate-300" : ""}`}
+        className={`order-1 font-bold ${typeOfPokemon !== "SHINY" ? "dark:text-slate-300" : "text-shadow-lg"}`}
       >
         {typeOfPokemon}
       </p>
