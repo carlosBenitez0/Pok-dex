@@ -23,7 +23,7 @@ function App() {
   return (
     <div className="relative min-h-screen w-full bg-slate-100 text-[1.6rem] dark:bg-[#0e1217]">
       {/* Video de fondo */}
-      {normalShiny !== "NORMAL" ? (
+      {/* {normalShiny !== "NORMAL" ? (
         <div className="fixed inset-0 z-0">
           <video
             id="myVideo"
@@ -40,17 +40,16 @@ function App() {
             Tu navegador no soporta el elemento video.
           </video>
         </div>
-      ) : null}
+      ) : null} */}
 
       {/* Video de fondo */}
 
       {/* Contenido principal */}
       <div className="relative z-10 min-h-screen w-full">
-        <Header normalShiny={normalShiny}>
+        <Header>
           <div className="mb-8 flex items-center justify-between gap-8">
             <Logo urlLogo="https://res.cloudinary.com/dc69f3e0o/image/upload/v1726878134/Pokedex/giyntoth5j2dy870vuud.png" />
             <div className="flex items-center justify-end gap-8">
-              <Search />
               <Toggle onClic={changeNormalShiny} typeOfPokemon={normalShiny} />
               <ToggleFrontBack
                 onClic={changeFrontBack}
