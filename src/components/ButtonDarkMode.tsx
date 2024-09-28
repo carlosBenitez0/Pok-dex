@@ -45,7 +45,7 @@ function ButtonDarkMode() {
           viewBox="0 0 24 24"
           strokeWidth="1.5"
           stroke="url(#blueGradient)"
-          className="size-10"
+          className="size-12"
         >
           <defs>
             <linearGradient id="blueGradient" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -72,7 +72,7 @@ function ButtonDarkMode() {
           viewBox="0 0 24 24"
           strokeWidth="1.5"
           stroke="url(#goldGradient)"
-          className="size-10"
+          className="size-12"
         >
           <defs>
             <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="0%">

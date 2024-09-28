@@ -11,6 +11,7 @@ import ToggleFrontBack from "./components/toggles/ToggleFrontBack";
 import { useNormalShiny } from "./hooks/useNormalShiny";
 import { useFrontBack } from "./hooks/useFrontBack";
 import { useSelectedFilter } from "./hooks/useSelectedFilter";
+import Search from "./components/Search";
 
 function App() {
   const { selectedFilter, handleFilterClick, filterPokemon } =
@@ -48,7 +49,9 @@ function App() {
         <Header normalShiny={normalShiny}>
           <div className="mb-8 flex items-center justify-between gap-8">
             <Logo urlLogo="https://res.cloudinary.com/dc69f3e0o/image/upload/v1726878134/Pokedex/giyntoth5j2dy870vuud.png" />
-            <div className="flex items-center justify-end gap-8">
+
+            <div className="flex w-full items-center justify-end gap-8">
+              <Search />
               <Toggle onClic={changeNormalShiny} typeOfPokemon={normalShiny} />
               <ToggleFrontBack
                 onClic={changeFrontBack}
