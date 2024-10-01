@@ -14,6 +14,7 @@ import { useSelectedFilter } from "./hooks/useSelectedFilter";
 import Search from "./components/Search";
 import { useEffect, useMemo, useState } from "react";
 import { useDebounce } from "./hooks/useDebounce";
+import { CheckboxOrder } from "./components/CheckboxOrder";
 
 function App() {
   const { selectedFilter, handleFilterClick, filterPokemon, filteredPokemon } =
@@ -25,7 +26,6 @@ function App() {
   const [listOfPokemons, setListOfPokemons] = useState<(IResponse | null)[]>(
     [],
   );
-
   const [fistRender, setFistRender] = useState(true);
 
   //Se crea nuevamente cada vez que cambia el search ya que search usa un useState
@@ -47,6 +47,12 @@ function App() {
 
   const handleSearchChange = (value: string) => {
     setSearch(value);
+  };
+
+  const [checked, setChecked] = useState(false);
+
+  const handleChange = () => {
+    setChecked(!checked);
   };
 
   return (
@@ -76,18 +82,25 @@ function App() {
       {/* Contenido principal */}
       <div className="relative z-10 min-h-screen w-full">
         <Header>
-          <div className="mb-8 flex items-center justify-between gap-8">
-            <Logo urlLogo="https://res.cloudinary.com/dc69f3e0o/image/upload/v1726878134/Pokedex/giyntoth5j2dy870vuud.png" />
-
-            <div className="flex w-full items-center justify-end gap-8">
+          <div className="mb-8 flex flex-wrap items-center justify-between gap-8">
+            <div className="flex w-full items-center justify-between gap-8">
+              <Logo urlLogo="https://res.cloudinary.com/dc69f3e0o/image/upload/v1726878134/Pokedex/giyntoth5j2dy870vuud.png" />
               <Search onSearchChange={handleSearchChange} />
+              <ButtonDarkMode />
+            </div>
+
+            <div className="justify-left flex w-full items-center gap-16">
+              <CheckboxOrder
+                sortOrDisorder={handleChange}
+                normalShiny={normalShiny}
+                checked={checked}
+              />
               <Toggle onClic={changeNormalShiny} typeOfPokemon={normalShiny} />
               <ToggleFrontBack
                 onClic={changeFrontBack}
                 frontBack={frontBack}
                 normalShiny={normalShiny}
               />
-              <ButtonDarkMode />
             </div>
           </div>
           <div className="flex flex-wrap gap-4">

@@ -15,6 +15,7 @@ export const useSelectedFilter = () => {
   });
 
   // Estado para almacenar la lista filtrada de Pokémon
+  //Se hace esto porque el pokemonData al ser asincrono, puede que venga vacio en el primer render
   const [filteredPokemon, setFilteredPokemon] = useState<(IResponse | null)[]>(
     [],
   );
