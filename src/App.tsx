@@ -4,7 +4,7 @@ import Header, { Logo } from "./components/Header";
 import Filter from "./components/Filter";
 import Card from "./components/Card";
 import Toggle from "./components/toggles/Toggle";
-import { Type } from "./interfaces/IResponse";
+import { IResponse, Type } from "./interfaces/IResponse";
 import ButtonDarkMode from "./components/ButtonDarkMode";
 import ToggleFrontBack from "./components/toggles/ToggleFrontBack";
 // custom hooks
@@ -12,6 +12,7 @@ import { useNormalShiny } from "./hooks/useNormalShiny";
 import { useFrontBack } from "./hooks/useFrontBack";
 import { useSelectedFilter } from "./hooks/useSelectedFilter";
 import Search from "./components/Search";
+import { useEffect, useState } from "react";
 
 function App() {
   const { selectedFilter, handleFilterClick, filterPokemon } =
@@ -19,6 +20,17 @@ function App() {
   const { normalShiny, changeNormalShiny, filtersNormalShiny } =
     useNormalShiny();
   const { frontBack, changeFrontBack } = useFrontBack();
+  const [search, setSearch] = useState("");
+  const [listOfPokemons, setListOfPokemons] = useState<IResponse[]>([]);
+
+  useEffect(() => {
+    setListOfPokemons(filterPokemon());
+  }, [selectedFilter]);
+
+  const handleSearchChange = (value: string) => {
+    setSearch(value);
+    setListOfPokemons(filterPokemon(value));
+  };
 
   return (
     <div className="relative min-h-screen w-full bg-slate-100 text-[1.6rem] dark:bg-[#0e1217]">
@@ -49,7 +61,9 @@ function App() {
         <Header>
           <div className="mb-8 flex items-center justify-between gap-8">
             <Logo urlLogo="https://res.cloudinary.com/dc69f3e0o/image/upload/v1726878134/Pokedex/giyntoth5j2dy870vuud.png" />
-            <div className="flex items-center justify-end gap-8">
+
+            <div className="flex w-full items-center justify-end gap-8">
+              <Search onSearchChange={handleSearchChange} />
               <Toggle onClic={changeNormalShiny} typeOfPokemon={normalShiny} />
               <ToggleFrontBack
                 onClic={changeFrontBack}
@@ -66,14 +80,14 @@ function App() {
                 filterName={element}
                 filterColor={element}
                 selectedFilter={selectedFilter}
-                onClick={handleFilterClick}
+                changeFilter={handleFilterClick}
               />
             ))}
           </div>
         </Header>
         <main className="z-10 mx-auto w-3/4 p-8 pt-12">
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3">
-            {filterPokemon().map(
+            {listOfPokemons.map(
               (pokemon) =>
                 pokemon && (
                   <Card

@@ -19,18 +19,33 @@ export const useSelectedFilter = () => {
     window.localStorage.setItem("selectedFilter", JSON.stringify(filterName));
   };
 
-  const filterPokemon = () => {
-    const filteredPokemon =
-      selectedFilter === "All"
-        ? pokemonData
-        : pokemonData.filter(
+  const filterPokemon = (search?: string) => {
+    console.log(selectedFilter);
+    let _pokemon;
+    if (search !== undefined && search?.length > 0) {
+      _pokemon = pokemonData
+        ? pokemonData.filter(
             (pokemon) =>
               pokemon &&
-              pokemon.types.some(
-                (type: Type) => type.type.name === selectedFilter.split("_")[0],
-              ),
-          );
-    return filteredPokemon;
+              pokemon.name.toLowerCase().includes(search.toLowerCase()),
+          )
+        : null;
+    } else {
+      _pokemon =
+        selectedFilter === "All"
+          ? pokemonData
+          : pokemonData.filter(
+              (pokemon) =>
+                pokemon &&
+                pokemon.types.some(
+                  (type: Type) =>
+                    type.type.name === selectedFilter.split("_")[0],
+                ),
+            );
+    }
+
+    console.log(_pokemon);
+    return _pokemon;
   };
 
   return { selectedFilter, handleFilterClick, filterPokemon };

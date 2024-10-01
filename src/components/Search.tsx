@@ -5,9 +5,12 @@ const styles = {
   appearance: "none",
 };
 
-const Search = () => {
+interface props {
+  onSearchChange: (value: string) => void;
+}
+const Search = ({ onSearchChange }: props) => {
   const [focus, setFocus] = useState(false);
-  const [thereAreText, setThereAreText] = useState(false);
+  const [search, setSearch] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleFocus = () => {
@@ -16,7 +19,7 @@ const Search = () => {
 
   // Manejador cuando el input pierde el foco
   const handleBlur = () => {
-    if (!thereAreText) {
+    if (search?.length > 0) {
       setFocus(false);
     }
   };
@@ -24,14 +27,16 @@ const Search = () => {
   const handleChange = () => {
     const value = inputRef.current?.value;
     if (value != undefined) {
-      setThereAreText(value !== "");
+      setSearch(value);
+      onSearchChange(value);
     }
   };
 
   const deleteText = () => {
     if (inputRef.current != null) {
       inputRef.current.value = "";
-      setThereAreText(false);
+      setSearch("");
+      onSearchChange("");
       setFocus(false);
     }
   };
@@ -72,6 +77,7 @@ const Search = () => {
           onFocus={handleFocus}
           onBlur={handleBlur}
           onChange={handleChange}
+          value={search}
           autoComplete="off"
         />
         <div className="flex items-center justify-center rounded-r-3xl p-3 text-slate-500 dark:text-slate-300">
@@ -82,7 +88,7 @@ const Search = () => {
               viewBox="0 0 24 24"
               stroke-width="1.5"
               stroke="currentColor"
-              className={`size-10 cursor-pointer ${thereAreText ? "block" : "hidden"}`}
+              className={`size-10 cursor-pointer ${search.length > 0 ? "block" : "hidden"}`}
               onClick={deleteText}
             >
               <path
