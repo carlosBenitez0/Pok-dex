@@ -16,7 +16,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useDebounce } from "./hooks/useDebounce";
 
 function App() {
-  const { selectedFilter, handleFilterClick, filterPokemon } =
+  const { selectedFilter, handleFilterClick, filterPokemon, filteredPokemon } =
     useSelectedFilter();
   const { normalShiny, changeNormalShiny, filtersNormalShiny } =
     useNormalShiny();
@@ -26,15 +26,23 @@ function App() {
     [],
   );
 
+  const [fistRender, setFistRender] = useState(true);
+
   //Se crea nuevamente cada vez que cambia el search ya que search usa un useState
   const debouncedSearch = useDebounce(search, 250);
 
   const filteredPokemonList = useMemo(() => {
     return filterPokemon(debouncedSearch);
-  }, [debouncedSearch, selectedFilter]);
+  }, [debouncedSearch, selectedFilter, filteredPokemon]);
 
   useEffect(() => {
+    if (fistRender) {
+      setFistRender(false);
+      return;
+    }
+
     setListOfPokemons(filteredPokemonList);
+    console.log(listOfPokemons);
   }, [filteredPokemonList]);
 
   const handleSearchChange = (value: string) => {

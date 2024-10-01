@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { usePokemonData } from "./usePokemonData";
-import { Type } from "../interfaces/IResponse";
+import { IResponse, Type } from "../interfaces/IResponse";
 
 export const useSelectedFilter = () => {
   const { pokemonData } = usePokemonData();
@@ -10,9 +10,21 @@ export const useSelectedFilter = () => {
       return selectedFilterStorage ? JSON.parse(selectedFilterStorage) : "All";
     } catch (error) {
       console.error("Error parsing selectedFilter from localStorage:", error);
-      return "All"; // Valor por defecto en caso de error ya que no se puede leer un json que es undefined
+      return "All"; // Valor por defecto en caso de error
     }
   });
+
+  // Estado para almacenar la lista filtrada de Pokémon
+  const [filteredPokemon, setFilteredPokemon] = useState<(IResponse | null)[]>(
+    [],
+  );
+
+  useEffect(() => {
+    if (pokemonData) {
+      // Filtra los Pokémon cuando pokemonData o selectedFilter cambian
+      setFilteredPokemon(filterPokemon(""));
+    }
+  }, [pokemonData]);
 
   const handleFilterClick = (filterName: string) => {
     setSelectedFilter(filterName);
@@ -20,30 +32,28 @@ export const useSelectedFilter = () => {
   };
 
   const filterPokemon = (search: string) => {
+    if (!pokemonData) return [];
+    console.log(pokemonData);
     let _pokemon;
 
-    if (search && search !== undefined && search.length > 0) {
+    if (search && search.length > 0) {
       // Comprobamos si el 'search' coincide con un tipo de Pokémon
-      _pokemon = pokemonData
-        ? pokemonData.filter(
-            (pokemon) =>
-              pokemon &&
-              pokemon.types.some(
-                (type: Type) =>
-                  type.type.name.toLowerCase() === search.toLowerCase(),
-              ),
-          )
-        : null;
+      _pokemon = pokemonData.filter(
+        (pokemon) =>
+          pokemon &&
+          pokemon.types.some(
+            (type: Type) =>
+              type.type.name.toLowerCase() === search.toLowerCase(),
+          ),
+      );
 
       // Si no encuentra Pokémon por tipo, filtramos por nombre
-      if (_pokemon?.length === 0 || _pokemon === null) {
-        _pokemon = pokemonData
-          ? pokemonData.filter(
-              (pokemon) =>
-                pokemon &&
-                pokemon.name.toLowerCase().includes(search.toLowerCase()),
-            )
-          : null;
+      if (_pokemon.length === 0) {
+        _pokemon = pokemonData.filter(
+          (pokemon) =>
+            pokemon &&
+            pokemon.name.toLowerCase().includes(search.toLowerCase()),
+        );
       }
     } else {
       // Si no hay búsqueda activa, filtra según el filtro seleccionado
@@ -60,9 +70,13 @@ export const useSelectedFilter = () => {
             );
     }
 
-    console.log(_pokemon);
     return _pokemon;
   };
 
-  return { selectedFilter, handleFilterClick, filterPokemon };
+  return {
+    selectedFilter,
+    handleFilterClick,
+    filterPokemon,
+    filteredPokemon,
+  };
 };
