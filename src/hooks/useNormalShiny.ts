@@ -4,7 +4,6 @@ import { typeColors, typeColorsShiny } from "../constants/constants";
 export const useNormalShiny = () => {
   const [normalShiny, setNormalShiny] = useState<string>(() => {
     const normalShinyStorage = window.localStorage.getItem("normalShiny");
-    console.log(normalShinyStorage);
     try {
       return normalShinyStorage ? JSON.parse(normalShinyStorage) : "NORMAL";
     } catch (error) {

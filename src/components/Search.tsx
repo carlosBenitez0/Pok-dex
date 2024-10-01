@@ -19,7 +19,7 @@ const Search = ({ onSearchChange }: props) => {
 
   // Manejador cuando el input pierde el foco
   const handleBlur = () => {
-    if (search?.length > 0) {
+    if (search?.length >= 0) {
       setFocus(false);
     }
   };
@@ -72,7 +72,7 @@ const Search = ({ onSearchChange }: props) => {
           className={`bg-transparent py-3 ${styles} w-full outline-none ${focus ? "text-slate-600 dark:text-slate-200" : ""}`}
           id="search"
           type="text"
-          placeholder="Bulbasaur, Ivysaur, Venusaur..."
+          placeholder="Search by name or filter"
           ref={inputRef}
           onFocus={handleFocus}
           onBlur={handleBlur}

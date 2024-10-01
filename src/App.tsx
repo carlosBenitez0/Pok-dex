@@ -12,7 +12,8 @@ import { useNormalShiny } from "./hooks/useNormalShiny";
 import { useFrontBack } from "./hooks/useFrontBack";
 import { useSelectedFilter } from "./hooks/useSelectedFilter";
 import Search from "./components/Search";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useDebounce } from "./hooks/useDebounce";
 
 function App() {
   const { selectedFilter, handleFilterClick, filterPokemon } =
@@ -21,15 +22,23 @@ function App() {
     useNormalShiny();
   const { frontBack, changeFrontBack } = useFrontBack();
   const [search, setSearch] = useState("");
-  const [listOfPokemons, setListOfPokemons] = useState<IResponse[]>([]);
+  const [listOfPokemons, setListOfPokemons] = useState<(IResponse | null)[]>(
+    [],
+  );
+
+  //Se crea nuevamente cada vez que cambia el search ya que search usa un useState
+  const debouncedSearch = useDebounce(search, 250);
+
+  const filteredPokemonList = useMemo(() => {
+    return filterPokemon(debouncedSearch);
+  }, [debouncedSearch, selectedFilter]);
 
   useEffect(() => {
-    setListOfPokemons(filterPokemon());
-  }, [selectedFilter]);
+    setListOfPokemons(filteredPokemonList);
+  }, [filteredPokemonList]);
 
   const handleSearchChange = (value: string) => {
     setSearch(value);
-    setListOfPokemons(filterPokemon(value));
   };
 
   return (

@@ -19,18 +19,34 @@ export const useSelectedFilter = () => {
     window.localStorage.setItem("selectedFilter", JSON.stringify(filterName));
   };
 
-  const filterPokemon = (search?: string) => {
-    console.log(selectedFilter);
+  const filterPokemon = (search: string) => {
     let _pokemon;
-    if (search !== undefined && search?.length > 0) {
+
+    if (search && search !== undefined && search.length > 0) {
+      // Comprobamos si el 'search' coincide con un tipo de Pokémon
       _pokemon = pokemonData
         ? pokemonData.filter(
             (pokemon) =>
               pokemon &&
-              pokemon.name.toLowerCase().includes(search.toLowerCase()),
+              pokemon.types.some(
+                (type: Type) =>
+                  type.type.name.toLowerCase() === search.toLowerCase(),
+              ),
           )
         : null;
+
+      // Si no encuentra Pokémon por tipo, filtramos por nombre
+      if (_pokemon?.length === 0 || _pokemon === null) {
+        _pokemon = pokemonData
+          ? pokemonData.filter(
+              (pokemon) =>
+                pokemon &&
+                pokemon.name.toLowerCase().includes(search.toLowerCase()),
+            )
+          : null;
+      }
     } else {
+      // Si no hay búsqueda activa, filtra según el filtro seleccionado
       _pokemon =
         selectedFilter === "All"
           ? pokemonData
