@@ -26,7 +26,6 @@ function App() {
   const [listOfPokemons, setListOfPokemons] = useState<(IResponse | null)[]>(
     [],
   );
-  const [fistRender, setFistRender] = useState(true);
 
   //Se crea nuevamente cada vez que cambia el search ya que search usa un useState
   const debouncedSearch = useDebounce(search, 250);
@@ -36,13 +35,8 @@ function App() {
   }, [debouncedSearch, selectedFilter, filteredPokemon]);
 
   useEffect(() => {
-    if (fistRender) {
-      setFistRender(false);
-      return;
-    }
-
     setListOfPokemons(filteredPokemonList);
-    console.log(listOfPokemons);
+    // console.log(listOfPokemons);
   }, [filteredPokemonList]);
 
   const handleSearchChange = (value: string) => {
@@ -51,8 +45,9 @@ function App() {
 
   const [checked, setChecked] = useState(false);
 
-  const handleChange = () => {
+  const handleChangeCheckbox = () => {
     setChecked(!checked);
+    setListOfPokemons(filterPokemon("", !checked));
   };
 
   return (
@@ -91,7 +86,7 @@ function App() {
 
             <div className="justify-left flex w-full items-center gap-16">
               <CheckboxOrder
-                sortOrDisorder={handleChange}
+                sortOrDisorder={handleChangeCheckbox}
                 normalShiny={normalShiny}
                 checked={checked}
               />

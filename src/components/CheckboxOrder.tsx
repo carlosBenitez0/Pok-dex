@@ -15,11 +15,7 @@ export const CheckboxOrder = ({
 
   useEffect(() => {
     if (checkboxRef.current) {
-      if (checked) {
-        checkboxRef.current.checked = false;
-      } else {
-        checkboxRef.current.checked = true;
-      }
+      checkboxRef.current.checked = checked;
     }
   }, [checked]);
 
@@ -36,7 +32,7 @@ export const CheckboxOrder = ({
         htmlFor="checked-checkbox"
         className={`ml-2 font-bold uppercase ${normalShiny === "SHINY" ? "bg-gradient-to-r from-blue-400 to-blue-800 bg-clip-text text-transparent text-shadow-lg dark:from-blue-600 dark:via-blue-800 dark:to-transparent dark:bg-[length:100%_90%]" : "dark:text-gray-300"}`}
       >
-        {!checked ? "Sorted" : "disordered"}
+        {checked ? "Sorted" : "disordered"}
       </label>
     </div>
   );

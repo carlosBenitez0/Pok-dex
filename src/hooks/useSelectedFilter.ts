@@ -32,21 +32,35 @@ export const useSelectedFilter = () => {
     window.localStorage.setItem("selectedFilter", JSON.stringify(filterName));
   };
 
-  const filterPokemon = (search: string) => {
+  const filterPokemon = (search: string, checked?: boolean) => {
     if (!pokemonData) return [];
-    console.log(pokemonData);
+    // console.log(pokemonData);
     let _pokemon;
 
     if (search && search.length > 0) {
       // Comprobamos si el 'search' coincide con un tipo de Pokémon
-      _pokemon = pokemonData.filter(
-        (pokemon) =>
-          pokemon &&
-          pokemon.types.some(
-            (type: Type) =>
-              type.type.name.toLowerCase() === search.toLowerCase(),
-          ),
-      );
+      if (checked) {
+        _pokemon = [...pokemonData].sort((a, b) =>
+          a.name.toLowerCase().localeCompare(b.name.toLowerCase()),
+        );
+        _pokemon = _pokemon.filter(
+          (pokemon) =>
+            pokemon &&
+            pokemon.types.some(
+              (type: Type) =>
+                type.type.name.toLowerCase() === search.toLowerCase(),
+            ),
+        );
+      } else {
+        _pokemon = pokemonData.filter(
+          (pokemon) =>
+            pokemon &&
+            pokemon.types.some(
+              (type: Type) =>
+                type.type.name.toLowerCase() === search.toLowerCase(),
+            ),
+        );
+      }
 
       // Si no encuentra Pokémon por tipo, filtramos por nombre
       if (_pokemon.length === 0) {
@@ -58,17 +72,31 @@ export const useSelectedFilter = () => {
       }
     } else {
       // Si no hay búsqueda activa, filtra según el filtro seleccionado
-      _pokemon =
-        selectedFilter === "All"
-          ? pokemonData
-          : pokemonData.filter(
-              (pokemon) =>
-                pokemon &&
-                pokemon.types.some(
-                  (type: Type) =>
-                    type.type.name === selectedFilter.split("_")[0],
-                ),
-            );
+      if (checked) {
+        _pokemon = [...pokemonData].sort((a, b) =>
+          a.name.toLowerCase().localeCompare(b.name.toLowerCase()),
+        );
+
+        if (selectedFilter !== "All") {
+          _pokemon = _pokemon.filter((pokemon) =>
+            pokemon?.types.some(
+              (type: Type) => type.type.name === selectedFilter.split("_")[0],
+            ),
+          );
+        }
+      } else {
+        _pokemon =
+          selectedFilter === "All"
+            ? pokemonData
+            : pokemonData.filter(
+                (pokemon) =>
+                  pokemon &&
+                  pokemon.types.some(
+                    (type: Type) =>
+                      type.type.name === selectedFilter.split("_")[0],
+                  ),
+              );
+      }
     }
 
     return _pokemon;
