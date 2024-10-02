@@ -4,6 +4,7 @@ import { IResponse } from "../interfaces/IResponse";
 
 export const usePokemonData = () => {
   const [pokemonData, setPokemonData] = useState<(IResponse | null)[]>([]);
+  const [loader, setLoader] = useState(true);
 
   const getPokemonData = async (id: number): Promise<IResponse | null> => {
     const endPoint: string = `https://pokeapi.co/api/v2/pokemon-form/${id}/`;
@@ -23,11 +24,13 @@ export const usePokemonData = () => {
         promises.push(getPokemonData(i));
       }
       const results = await Promise.all(promises);
+
       setPokemonData(results);
+      setLoader(false);
     };
 
     getAllPokemon();
   }, []);
 
-  return { pokemonData };
+  return { pokemonData, loader };
 };

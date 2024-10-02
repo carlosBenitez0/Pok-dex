@@ -15,10 +15,16 @@ import Search from "./components/Search";
 import { useEffect, useMemo, useState } from "react";
 import { useDebounce } from "./hooks/useDebounce";
 import { CheckboxOrder } from "./components/CheckboxOrder";
+import { Loader } from "./components/Loader";
 
 function App() {
-  const { selectedFilter, handleFilterClick, filterPokemon, filteredPokemon } =
-    useSelectedFilter();
+  const {
+    selectedFilter,
+    handleFilterClick,
+    filterPokemon,
+    filteredPokemon,
+    loader,
+  } = useSelectedFilter();
   const { normalShiny, changeNormalShiny, filtersNormalShiny } =
     useNormalShiny();
   const { frontBack, changeFrontBack } = useFrontBack();
@@ -111,27 +117,35 @@ function App() {
           </div>
         </Header>
         <main className="z-10 mx-auto w-3/4 p-8 pt-12">
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3">
-            {listOfPokemons.map(
-              (pokemon) =>
-                pokemon && (
-                  <Card
-                    key={pokemon.id}
-                    id={pokemon.id}
-                    image={{
-                      normal_f: pokemon.sprites.front_default,
-                      normal_b: pokemon.sprites.back_default,
-                      shiny_f: pokemon.sprites.front_shiny,
-                      shiny_b: pokemon.sprites.back_shiny,
-                    }}
-                    name={pokemon.name}
-                    selectedFilter={selectedFilter}
-                    filters={pokemon.types.map((type: Type) => type.type.name)}
-                    normalShiny={normalShiny}
-                    frontBack={frontBack}
-                    onFilterClick={handleFilterClick}
-                  />
-                ),
+          <div
+            className={`${loader ? "flex w-full justify-center" : "grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3"} `}
+          >
+            {loader ? (
+              <Loader />
+            ) : (
+              listOfPokemons.map(
+                (pokemon) =>
+                  pokemon && (
+                    <Card
+                      key={pokemon.id}
+                      id={pokemon.id}
+                      image={{
+                        normal_f: pokemon.sprites.front_default,
+                        normal_b: pokemon.sprites.back_default,
+                        shiny_f: pokemon.sprites.front_shiny,
+                        shiny_b: pokemon.sprites.back_shiny,
+                      }}
+                      name={pokemon.name}
+                      selectedFilter={selectedFilter}
+                      filters={pokemon.types.map(
+                        (type: Type) => type.type.name,
+                      )}
+                      normalShiny={normalShiny}
+                      frontBack={frontBack}
+                      onFilterClick={handleFilterClick}
+                    />
+                  ),
+              )
             )}
           </div>
         </main>

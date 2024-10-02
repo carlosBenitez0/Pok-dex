@@ -3,7 +3,7 @@ import { usePokemonData } from "./usePokemonData";
 import { IResponse, Type } from "../interfaces/IResponse";
 
 export const useSelectedFilter = () => {
-  const { pokemonData } = usePokemonData();
+  const { pokemonData, loader } = usePokemonData();
   const [selectedFilter, setSelectedFilter] = useState<string>(() => {
     const selectedFilterStorage = window.localStorage.getItem("selectedFilter");
     try {
@@ -107,5 +107,6 @@ export const useSelectedFilter = () => {
     handleFilterClick,
     filterPokemon,
     filteredPokemon,
+    loader,
   };
 };
