@@ -111,7 +111,7 @@ function Card({
               selectedFilter={selectedFilter}
               filterColor={isNormal ? filter : filter + "_shiny"}
               filterName={filter}
-              onClick={() => onFilterClick(filter)}
+              changeFilter={() => onFilterClick(filter)}
             />
           ))}
         </div>

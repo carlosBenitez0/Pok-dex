@@ -40,9 +40,11 @@ export const useSelectedFilter = () => {
     if (search && search.length > 0) {
       // Comprobamos si el 'search' coincide con un tipo de Pokémon
       if (checked) {
-        _pokemon = [...pokemonData].sort((a, b) =>
-          a.name.toLowerCase().localeCompare(b.name.toLowerCase()),
-        );
+        _pokemon = [...pokemonData]
+          .filter((p): p is IResponse => p !== null)
+          .sort((a, b) =>
+            a.name.toLowerCase().localeCompare(b.name.toLowerCase()),
+          );
         _pokemon = _pokemon.filter(
           (pokemon) =>
             pokemon &&
@@ -73,9 +75,11 @@ export const useSelectedFilter = () => {
     } else {
       // Si no hay búsqueda activa, filtra según el filtro seleccionado
       if (checked) {
-        _pokemon = [...pokemonData].sort((a, b) =>
-          a.name.toLowerCase().localeCompare(b.name.toLowerCase()),
-        );
+        _pokemon = [...pokemonData]
+          .filter((p): p is IResponse => p !== null)
+          .sort((a, b) =>
+            a.name.toLowerCase().localeCompare(b.name.toLowerCase()),
+          );
 
         if (selectedFilter !== "All") {
           _pokemon = _pokemon.filter((pokemon) =>
