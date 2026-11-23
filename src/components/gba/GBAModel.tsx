@@ -128,6 +128,53 @@ function useLensGeometry() {
   }, []);
 }
 
+/**
+ * Gatillo: sector de anillo que sigue la esquina superior (radio R_TOP), con
+ * los dos extremos rematados en semicírculo y extruido con bisel.
+ * `a0`/`a1` en radianes, medidos desde el centro de la esquina.
+ */
+function triggerGeometry(a0: number, a1: number) {
+  const rIn = R_TOP - 0.03; // se mete un poco bajo la carcasa: sin huecos
+  const rOut = R_TOP + BEVEL + 0.065;
+  const rMid = (rIn + rOut) / 2;
+  const half = (rOut - rIn) / 2;
+  const capAt = (a: number) => [rMid * Math.cos(a), rMid * Math.sin(a)] as const;
+
+  const p = new THREE.Path();
+  p.absarc(0, 0, rOut, a0, a1, false); // borde exterior
+  const [ex, ey] = capAt(a1);
+  p.absarc(ex, ey, half, a1, a1 + Math.PI, false); // remate final
+  p.absarc(0, 0, rIn, a1, a0, true); // borde interior (vuelta)
+  const [sx, sy] = capAt(a0);
+  p.absarc(sx, sy, half, a0 + Math.PI, a0 + 2 * Math.PI, false); // remate inicial
+
+  const pts = p.getPoints(32);
+  const clean: THREE.Vector2[] = [];
+  for (const pt of pts) {
+    const last = clean[clean.length - 1];
+    if (!last || last.distanceTo(pt) > 1e-4) clean.push(pt);
+  }
+  if (clean.length > 1 && clean[0].distanceTo(clean[clean.length - 1]) < 1e-4) clean.pop();
+
+  const depth = 0.26;
+  const g = new THREE.ExtrudeGeometry(new THREE.Shape(clean), {
+    depth,
+    bevelEnabled: true,
+    bevelThickness: 0.05,
+    bevelSize: 0.03,
+    bevelSegments: 6,
+    curveSegments: 32,
+  });
+  // De la cara trasera de la carcasa hacia delante, sin llegar al frontal.
+  g.translate(0, 0, -FRONT_Z + 0.02);
+  g.computeVertexNormals();
+  return g;
+}
+
+// Derecho: de ~14° a ~78°; el izquierdo es su reflejo.
+const TRIGGER_A0 = 0.38;
+const TRIGGER_A1 = 1.3;
+
 const setCursor = (c: string) => () => {
   document.body.style.cursor = c;
 };
@@ -152,6 +199,8 @@ const GBAModel = forwardRef<GBAModelHandle, Props>(function GBAModel(
 ) {
   const shell = useShellGeometry();
   const lens = useLensGeometry();
+  const triggerR = useMemo(() => triggerGeometry(TRIGGER_A0, TRIGGER_A1), []);
+  const triggerL = useMemo(() => triggerGeometry(Math.PI - TRIGGER_A1, Math.PI - TRIGGER_A0), []);
   const dpad = useRef<THREE.Group>(null);
   const a = useRef<THREE.Mesh>(null);
   const b = useRef<THREE.Mesh>(null);
@@ -211,25 +260,22 @@ const GBAModel = forwardRef<GBAModelHandle, Props>(function GBAModel(
   const slot = useMemo(() => tint(shellColor, -0.45), [shellColor]);
   const engraving = useMemo(() => tint(shellColor, 0.4), [shellColor]);
 
-  // Gatillos L/R: tapas grises cortas en las esquinas superiores, hacia atrás.
-  // Siguen el arco de la esquina (radio R_TOP) con un toro parcial.
-  const bumper = (side: 1 | -1, refObj: typeof l, name: GBAButton) => {
-    const startAngle = 0.28;
-    const arc = 1.0;
-    const rotationZ = side === 1 ? startAngle : Math.PI - startAngle - arc;
-    return (
-      <group
-        ref={refObj}
-        position={[side * (HALF_W - R_TOP), TOP - R_TOP, -0.05]}
-        scale={[1, 1, 1.55]}
+  // Gatillos L/R: piezas grises sólidas en las esquinas superiores, hacia
+  // atrás, con los extremos redondeados (antes eran un toro abierto y se
+  // veían cortados).
+  const bumper = (side: 1 | -1, refObj: typeof l, name: GBAButton) => (
+    <group ref={refObj} position={[side * (HALF_W - R_TOP), TOP - R_TOP, 0]}>
+      <mesh
+        geometry={side === 1 ? triggerR : triggerL}
+        onPointerDown={click(name)}
+        {...hover}
+        castShadow
+        receiveShadow
       >
-        <mesh rotation={[0, 0, rotationZ]} onPointerDown={click(name)} {...hover} castShadow>
-          <torusGeometry args={[R_TOP + BEVEL * 0.8, 0.12, 24, 48, arc]} />
-          <meshStandardMaterial color={BUMPER_GRAY} roughness={0.55} />
-        </mesh>
-      </group>
-    );
-  };
+        <meshStandardMaterial color={BUMPER_GRAY} roughness={0.5} />
+      </mesh>
+    </group>
+  );
 
   // Botón redondo gris con un hundimiento apenas más oscuro que la carcasa.
   const roundButton = (

@@ -8,10 +8,11 @@ import type { SpriteGame } from "../interfaces/IPokemonDetail";
 import { loadPokemonDetail, usePokemonDetail } from "../hooks/usePokemonDetail";
 import { keyHints, useGBAControls } from "../hooks/useGBAControls";
 import { TYPE_HEX } from "../constants/typeChart";
-import { addZeros, prettify } from "../utils/format";
+import { addZeros } from "../utils/format";
 import { isMuted, setMuted, sfx } from "../utils/sfx";
 import { useI18n, type Lang } from "../i18n";
 import { LangToggle } from "../components/TopBar";
+import { FormPicker } from "../components/gba/FormPicker";
 
 const MAX_ID = 1025;
 
@@ -281,20 +282,12 @@ export default function PokemonDetailPage() {
         {/* Segunda fila: forma, juego de sprites y zoom */}
         <div className="no-scrollbar -mx-4 flex items-center gap-3 overflow-x-auto px-4 sm:mx-0 sm:px-0">
           {data && data.forms.length > 1 && (
-            <label className="flex shrink-0 items-center gap-2">
-              <span className="text-slate-400">{t("detail.forms")}</span>
-              <select
-                value={data.id}
-                onChange={(e) => navigate(`/pokemon/${e.target.value}`, { replace: true })}
-                className="cursor-pointer rounded-full bg-white/10 px-4 py-2 font-medium outline-none focus-visible:ring-2 focus-visible:ring-blue-400 [&>option]:text-slate-900"
-              >
-                {data.forms.map((f) => (
-                  <option key={f.id} value={f.id}>
-                    {prettify(f.name)}
-                  </option>
-                ))}
-              </select>
-            </label>
+            <FormPicker
+              forms={data.forms}
+              currentId={data.id}
+              lang={lang}
+              onChange={(fid) => navigate(`/pokemon/${fid}`, { replace: true })}
+            />
           )}
           {availableGames.length > 1 && (
             <div role="radiogroup" aria-label={t("detail.game")} className="flex shrink-0 items-center gap-1 rounded-full bg-white/10 p-1">
