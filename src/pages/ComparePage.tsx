@@ -11,6 +11,7 @@ import { useI18n } from "../i18n";
 import { damageMultiplier, TYPE_HEX } from "../constants/typeChart";
 import { addZeros, prettify, statTotal } from "../utils/format";
 import { artworkUrl } from "../utils/sprites";
+import { PokemonOption } from "../components/PokemonOption";
 import type { PokedexEntry } from "../data/types";
 
 function Picker({ list, onPick }: { list: PokedexEntry[]; onPick: (id: number) => void }) {
@@ -28,10 +29,10 @@ function Picker({ list, onPick }: { list: PokedexEntry[]; onPick: (id: number) =
         onChange={(e) => setQ(e.target.value)}
         placeholder={t("compare.pick")}
         autoComplete="off"
-        className="w-full rounded-full bg-slate-200 px-5 py-3 outline-none focus-visible:ring-2 focus-visible:ring-blue-500 dark:bg-[#1c1f26]"
+        className="h-[5.2rem] w-full rounded-2xl bg-white/80 px-5 shadow-sm outline-none ring-1 ring-slate-200 focus:ring-2 focus:ring-blue-500 dark:bg-white/[0.04] dark:ring-white/10"
       />
       {options.length > 0 && (
-        <ul className="overflow-hidden rounded-2xl border border-slate-200 bg-white dark:border-white/10 dark:bg-[#1c1f26]">
+        <ul className="animate-[pop_140ms_ease-out] overflow-hidden rounded-2xl bg-white/95 p-2 shadow-[0_20px_50px_-12px_rgb(15_23_42/0.35)] ring-1 ring-slate-200 dark:bg-[#161a21]/95 dark:ring-white/10">
           {options.map((p) => (
             <li key={p.id}>
               <button
@@ -40,10 +41,9 @@ function Picker({ list, onPick }: { list: PokedexEntry[]; onPick: (id: number) =
                   onPick(p.id);
                   setQ("");
                 }}
-                className="flex w-full items-center gap-3 px-4 py-2 text-left hover:bg-slate-100 dark:hover:bg-white/10"
+                className="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left hover:bg-slate-100 dark:hover:bg-white/[0.07]"
               >
-                <span className="w-14 text-slate-400">#{addZeros(p.id)}</span>
-                <span className="font-semibold">{prettify(p.name)}</span>
+                <PokemonOption p={p} query={q} />
               </button>
             </li>
           ))}

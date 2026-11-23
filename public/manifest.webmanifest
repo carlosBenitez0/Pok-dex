@@ -1,0 +1,17 @@
+{
+  "name": "Pokédex Advance",
+  "short_name": "Pokédex",
+  "description": "Pokédex de las 1025 especies con ficha en una Game Boy Advance 3D.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0e1217",
+  "theme_color": "#5a4fb6",
+  "lang": "es",
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

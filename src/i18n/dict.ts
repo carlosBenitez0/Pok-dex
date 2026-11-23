@@ -60,7 +60,7 @@ const es = {
   "team.resist": "Resisten",
   "team.covered": "Cubierto",
   "team.notCovered": "Sin cobertura",
-  "team.warn": "Ojo: {n} miembros son débiles a {type} y ninguno lo resiste.",
+  "team.warn": "Tipos peligrosos: varios miembros son débiles y ninguno los resiste.",
   "team.stats": "Stats medias del equipo",
 
   // Comparador
@@ -151,7 +151,7 @@ const en: typeof es = {
   "team.resist": "Resist",
   "team.covered": "Covered",
   "team.notCovered": "Not covered",
-  "team.warn": "Heads up: {n} members are weak to {type} and none resist it.",
+  "team.warn": "Danger types: several members are weak and none resist them.",
   "team.stats": "Team average stats",
 
   "compare.title": "Compare",

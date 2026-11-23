@@ -49,7 +49,7 @@ function HomePage() {
     () => filterPokedex(list, { search: deferredSearch, gen, types, sort, dir, favoritesOnly, favorites }),
     [list, deferredSearch, gen, types, sort, dir, favoritesOnly, favorites],
   );
-  const suggestions = useMemo(() => suggest(list, search), [list, search]);
+  const suggestions = useMemo(() => suggest(list, search, 7), [list, search]);
 
   // Scroll infinito: se pintan bloques de 48 a medida que aparece el centinela.
   const [visible, setVisible] = useState(PAGE);
@@ -82,7 +82,7 @@ function HomePage() {
       header={
         <div className="flex flex-col gap-6">
           <TopBar />
-          <Search value={search} onChange={setSearch} suggestions={suggestions} onPick={openPokemon} />
+          <Search value={search} onChange={setSearch} suggestions={suggestions} onPick={openPokemon} resultCount={results.length} />
           <GenerationTabs gen={gen} onChange={setGen} />
           <TypeChips
             types={types}

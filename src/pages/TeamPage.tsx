@@ -108,10 +108,16 @@ export default function TeamPage() {
           ) : (
             <div className="mt-10 grid gap-8 lg:grid-cols-2">
               {threats.length > 0 && (
-                <div role="alert" className="rounded-2xl border border-amber-300 bg-amber-50 p-5 text-amber-900 lg:col-span-2 dark:border-amber-500/40 dark:bg-amber-500/10 dark:text-amber-200">
-                  {threats.map((r) => (
-                    <p key={r.attack}>⚠ {t("team.warn", { n: r.weak, type: typeName(r.attack) })}</p>
-                  ))}
+                <div role="alert" className="flex flex-col gap-3 rounded-2xl border border-amber-300 bg-amber-50 p-5 text-amber-900 sm:flex-row sm:items-center lg:col-span-2 dark:border-amber-500/40 dark:bg-amber-500/10 dark:text-amber-200">
+                  <p className="font-semibold">⚠ {t("team.warn")}</p>
+                  <ul className="flex flex-wrap gap-2">
+                    {threats.map((r) => (
+                      <li key={r.attack} className="flex items-center gap-1.5 rounded-full bg-white/70 py-0.5 pl-0.5 pr-3 dark:bg-black/20">
+                        <TypeBadge type={r.attack} label={typeName(r.attack)} />
+                        <span className="text-[1.3rem] font-bold">×{r.weak}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               )}
 
