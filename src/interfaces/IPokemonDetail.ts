@@ -15,6 +15,7 @@ type SpriteSet = {
 export interface ApiPokemon {
   id: number;
   name: string;
+  species: NamedResource;
   height: number;
   weight: number;
   base_experience: number | null;
@@ -61,6 +62,12 @@ export interface ApiSpecies {
   is_legendary: boolean;
   is_mythical: boolean;
   evolution_chain: { url: string };
+  varieties: { is_default: boolean; pokemon: NamedResource }[];
+}
+
+export interface ApiEncounter {
+  location_area: NamedResource;
+  version_details: { version: NamedResource; max_chance: number }[];
 }
 
 export interface ApiEvolutionNode {
@@ -105,6 +112,23 @@ export interface DetailStat {
 export interface DetailMove {
   name: string;
   level: number;
+  type: string | null;
+  power: number | null;
+  acc: number | null;
+  cls: "physical" | "special" | "status" | null;
+}
+
+export type SpriteGame = "frlg" | "rs" | "emerald" | "modern";
+
+export interface GameSprites {
+  front: string | null;
+  frontShiny: string | null;
+}
+
+export interface DetailEncounter {
+  location: string;
+  versions: string[];
+  chance: number;
 }
 
 export interface EvolutionStage {
@@ -116,7 +140,14 @@ export interface EvolutionStage {
 
 export interface PokemonDetail {
   id: number;
+  /** Id de la especie (igual a `id` salvo en formas: 10034 → 6). */
+  speciesId: number;
   name: string;
+  /** Formas jugables de la especie (regionales, Mega, Gigamax…), con la base. */
+  forms: { id: number; name: string }[];
+  /** Sprites frontales por juego (las espaldas siempre son las completas). */
+  spritesByGame: Partial<Record<SpriteGame, GameSprites>>;
+  encounters: DetailEncounter[];
   displayName: string;
   genus: string;
   description: string;

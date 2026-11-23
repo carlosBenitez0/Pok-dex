@@ -20,15 +20,28 @@ const KEYMAP: Record<string, GBAButton> = {
   Shift: "select",
 };
 
-export const KEY_HINTS: [string, string][] = [
-  ["← →", "Pestaña"],
-  ["↑ ↓", "Desplazar"],
-  ["X / Espacio", "A · Grito"],
-  ["Z / Esc", "B · Volver"],
-  ["Q · E", "L/R · Pokémon"],
-  ["Enter", "Start · Shiny"],
-  ["Shift", "Select · Frente/Espalda"],
-];
+const HINTS: Record<"es" | "en", [string, string][]> = {
+  es: [
+    ["← →", "Pestaña"],
+    ["↑ ↓", "Desplazar"],
+    ["X / Espacio", "A · Grito"],
+    ["Z / Esc", "B · Volver"],
+    ["Q · E", "L/R · Pokémon"],
+    ["Enter", "Start · Shiny"],
+    ["Shift", "Select · Frente/Espalda"],
+  ],
+  en: [
+    ["← →", "Tab"],
+    ["↑ ↓", "Scroll"],
+    ["X / Space", "A · Cry"],
+    ["Z / Esc", "B · Back"],
+    ["Q · E", "L/R · Pokémon"],
+    ["Enter", "Start · Shiny"],
+    ["Shift", "Select · Front/Back"],
+  ],
+};
+
+export const keyHints = (lang: "es" | "en") => HINTS[lang];
 
 /** Teclado → botón de la GBA. El handler siempre es el más reciente. */
 export function useGBAControls(onButton: (btn: GBAButton) => void) {

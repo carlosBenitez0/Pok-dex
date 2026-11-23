@@ -21,6 +21,7 @@ type Props = {
   shellColor: string;
   translucent: boolean;
   view: ViewMode;
+  insets: Insets;
   onButton: (btn: GBAButton) => void;
   screen: ReactNode;
 };
@@ -33,26 +34,34 @@ const FOV = 35;
 const prefersReducedMotion = () =>
   window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-/** Distancia de cámara para que un rectángulo w×h quepa en el viewport. */
-function fitDistance(w: number, h: number, aspect: number) {
-  const t = Math.tan(THREE.MathUtils.degToRad(FOV / 2));
-  return Math.max(h / (2 * t), w / (2 * t * aspect));
-}
+/** Píxeles de la ventana tapados por la UI superpuesta (barra superior / mando). */
+export type Insets = { top: number; bottom: number };
 
-function CameraRig({ view }: { view: ViewMode }) {
+function CameraRig({ view, insets }: { view: ViewMode; insets: Insets }) {
   const camera = useThree((s) => s.camera);
   const size = useThree((s) => s.size);
   const target = useRef(new THREE.Vector3(0, 0, 0));
   const first = useRef(true);
 
   useEffect(() => {
+    // El canvas ocupa toda la ventana (evita un fallo de Chrome al pintar el
+    // <Html transform> cuando el canvas está desplazado). La UI flota encima,
+    // así que encuadramos el objeto en la zona libre y movemos la cámara en
+    // vertical para centrarlo ahí, sin tocar la proyección (drei la usa para
+    // alinear el HTML).
+    const free = Math.max(1, size.height - insets.top - insets.bottom);
+    const ratio = free / size.height;
+    const t = Math.tan(THREE.MathUtils.degToRad(FOV / 2));
     const aspect = size.width / size.height;
     const toScreen = view === "screen";
-    const d = toScreen
-      ? fitDistance(SCREEN_SIZE.w * 1.08, SCREEN_SIZE.h * 1.1, aspect)
-      : fitDistance(6.0, 3.9, aspect);
-    const look = toScreen ? SCREEN_CENTER.clone() : new THREE.Vector3(0, 0.05, 0);
-    const pos = new THREE.Vector3(look.x, look.y, look.z + d);
+    const [w, h] = toScreen ? [SCREEN_SIZE.w * 1.08, SCREEN_SIZE.h * 1.1] : [6.0, 3.9];
+    const d = Math.max(h / (2 * t * ratio), w / (2 * t * aspect));
+    const worldPerPx = (2 * d * t) / size.height;
+    const shiftY = ((insets.top - insets.bottom) / 2) * worldPerPx;
+
+    const base = toScreen ? SCREEN_CENTER.clone() : new THREE.Vector3(0, 0.05, 0);
+    const look = base.clone().setY(base.y + shiftY);
+    const pos = new THREE.Vector3(look.x, look.y, base.z + d);
 
     const apply = () => camera.lookAt(target.current);
     if (first.current || prefersReducedMotion()) {
@@ -71,7 +80,7 @@ function CameraRig({ view }: { view: ViewMode }) {
     return () => {
       tl.kill();
     };
-  }, [view, size.width, size.height, camera]);
+  }, [view, size.width, size.height, insets.top, insets.bottom, camera]);
 
   return null;
 }
@@ -196,7 +205,7 @@ const GBAScene = forwardRef<GBASceneHandle, Props>(function GBAScene(props, ref)
         <Lightformer form="ring" intensity={2} color="#9fb4ff" position={[5, 1, 1]} rotation-y={-Math.PI / 2} scale={2} />
       </Environment>
 
-      <CameraRig view={props.view} />
+      <CameraRig view={props.view} insets={props.insets} />
       <ConsoleRig ref={ref} {...props} />
 
       <ContactShadows position={[0, -1.75, 0]} opacity={0.45} scale={10} blur={2.6} far={4} />
