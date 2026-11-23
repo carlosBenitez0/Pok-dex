@@ -1,0 +1,189 @@
+/* Pantalla de la GBA: 480×320 px (2× la resolución real 240×160).
+   Unidades en px a propósito: el root usa font-size 62.5%. */
+
+.gba-screen {
+  --lcd-bg: #f4f1de;
+  --lcd-ink: #1f2a33;
+  --lcd-dim: #6b7780;
+  --lcd-bar: #24303a;
+  --lcd-accent: #e04848;
+  --type: #a8a876;
+
+  position: relative;
+  width: 480px;
+  height: 320px;
+  overflow: hidden;
+  border-radius: 4px;
+  background: var(--lcd-bg);
+  color: var(--lcd-ink);
+  font-family: "VT323", ui-monospace, monospace;
+  font-size: 20px;
+  line-height: 1.05;
+  backface-visibility: hidden;
+  user-select: none;
+  -webkit-font-smoothing: none;
+}
+
+/* Rejilla LCD sutil encima de todo */
+.gba-screen::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(0deg, rgb(0 0 0 / 0.045) 0 1px, transparent 1px 2px),
+    repeating-linear-gradient(90deg, rgb(0 0 0 / 0.03) 0 1px, transparent 1px 2px);
+  mix-blend-mode: multiply;
+}
+
+.gba-pixel {
+  font-family: "Press Start 2P", ui-monospace, monospace;
+  letter-spacing: 0;
+}
+
+.gba-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  height: 38px;
+  padding: 0 12px;
+  background: var(--lcd-bar);
+  color: #f4f1de;
+  border-bottom: 4px solid var(--type);
+}
+
+.gba-header .gba-pixel {
+  font-size: 11px;
+}
+
+.gba-tabs {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+}
+
+.gba-tab-dot {
+  width: 6px;
+  height: 6px;
+  background: #5c6a75;
+}
+.gba-tab-dot[data-active="true"] {
+  background: var(--type);
+}
+
+.gba-body {
+  position: absolute;
+  inset: 42px 0 24px 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 10px 14px;
+  scrollbar-width: none;
+}
+.gba-body::-webkit-scrollbar {
+  display: none;
+}
+
+.gba-footer {
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10px;
+  font-size: 8px;
+  background: #e6e1c6;
+  color: var(--lcd-dim);
+  border-top: 2px solid #d4cfb0;
+}
+
+.gba-sprite {
+  image-rendering: pixelated;
+}
+
+.gba-type {
+  display: inline-block;
+  padding: 3px 6px 2px;
+  font-size: 8px;
+  color: #fff;
+  text-shadow: 1px 1px 0 rgb(0 0 0 / 0.45);
+  border: 2px solid rgb(0 0 0 / 0.25);
+}
+
+.gba-panel {
+  border: 2px solid #cfc9a8;
+  background: #fbf9ec;
+  padding: 6px 8px;
+}
+
+.gba-label {
+  color: var(--lcd-dim);
+}
+
+.gba-stat-track {
+  height: 10px;
+  background: #ddd8bb;
+  border: 2px solid #c4be9c;
+}
+.gba-stat-fill {
+  height: 100%;
+  transform-origin: left center;
+}
+
+.gba-link {
+  cursor: pointer;
+  background: none;
+  border: 0;
+  padding: 0;
+  color: inherit;
+  font: inherit;
+}
+.gba-link:hover,
+.gba-link:focus-visible {
+  outline: 2px solid var(--type);
+  outline-offset: 2px;
+}
+
+.gba-boot {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  background: #fff;
+  color: var(--lcd-bar);
+  pointer-events: none;
+}
+
+.gba-blink {
+  animation: gba-blink 0.8s steps(2, start) infinite;
+}
+@keyframes gba-blink {
+  to {
+    visibility: hidden;
+  }
+}
+
+/* Botones 2D para móvil (debajo del canvas) */
+.gba-pad-btn {
+  display: grid;
+  place-items: center;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 80ms;
+}
+.gba-pad-btn:active {
+  transform: scale(0.92);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gba-blink {
+    animation: none;
+  }
+}

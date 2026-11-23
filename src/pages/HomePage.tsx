@@ -1,22 +1,20 @@
-import "./best-css-reset.css";
-import "./App.css";
-import Header, { Logo } from "./components/Header";
-import Filter from "./components/Filter";
-import Card from "./components/Card";
-import Toggle from "./components/toggles/Toggle";
-import ButtonDarkMode from "./components/ButtonDarkMode";
-import ToggleFrontBack from "./components/toggles/ToggleFrontBack";
-import Search from "./components/Search";
-import { CheckboxOrder } from "./components/CheckboxOrder";
-import { Loader } from "./components/Loader";
+import Header, { Logo } from "../components/Header";
+import Filter from "../components/Filter";
+import Card from "../components/Card";
+import Toggle from "../components/toggles/Toggle";
+import ButtonDarkMode from "../components/ButtonDarkMode";
+import ToggleFrontBack from "../components/toggles/ToggleFrontBack";
+import Search from "../components/Search";
+import { CheckboxOrder } from "../components/CheckboxOrder";
+import { Loader } from "../components/Loader";
 // custom hooks
-import { useNormalShiny } from "./hooks/useNormalShiny";
-import { useFrontBack } from "./hooks/useFrontBack";
-import { useSelectedFilter } from "./hooks/useSelectedFilter";
-import { useDebounce } from "./hooks/useDebounce";
+import { useNormalShiny } from "../hooks/useNormalShiny";
+import { useFrontBack } from "../hooks/useFrontBack";
+import { useSelectedFilter } from "../hooks/useSelectedFilter";
+import { useDebounce } from "../hooks/useDebounce";
 import { useMemo, useState } from "react";
 
-function App() {
+function HomePage() {
   const { selectedFilter, handleFilterClick, filterPokemon, loader } =
     useSelectedFilter();
   const { normalShiny, changeNormalShiny, filtersNormalShiny } =
@@ -114,4 +112,4 @@ function App() {
     </div>
   );
 }
-export default App;
+export default HomePage;
