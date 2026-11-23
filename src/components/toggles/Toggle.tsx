@@ -1,9 +1,11 @@
+import { useI18n } from "../../i18n";
 type Props = {
   onClic: () => void;
   typeOfPokemon: string;
 };
 
 const Toggle = ({ onClic, typeOfPokemon }: Props) => {
+  const { t } = useI18n();
   const isShiny = typeOfPokemon !== "NORMAL";
 
   return (
@@ -36,7 +38,7 @@ const Toggle = ({ onClic, typeOfPokemon }: Props) => {
       <p
         className={`order-1 font-bold ${!isShiny ? "dark:text-slate-300" : "text-shadow-lg"}`}
       >
-        {typeOfPokemon}
+        {t(isShiny ? "shiny" : "normal")}
       </p>
     </div>
   );

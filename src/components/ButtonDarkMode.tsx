@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useI18n } from "../i18n";
 
 type Theme = "light" | "dark";
 
@@ -15,6 +16,7 @@ const readInitialTheme = (): Theme => {
 };
 
 function ButtonDarkMode() {
+  const { t } = useI18n();
   const [currentTheme, setCurrentTheme] = useState<Theme>(readInitialTheme);
 
   const toggleTheme = () => {
@@ -54,7 +56,7 @@ function ButtonDarkMode() {
     <button
       type="button"
       onClick={toggleTheme}
-      aria-label={isLight ? "Activar modo oscuro" : "Activar modo claro"}
+      aria-label={isLight ? t("theme.dark") : t("theme.light")}
       className="flex shrink-0 cursor-pointer items-center rounded-full bg-[#233b53] p-2 hover:bg-[#2c3e70] focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-500 dark:bg-[#444444] dark:hover:bg-[#666666]"
     >
       {isLight ? (

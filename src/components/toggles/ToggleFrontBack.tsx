@@ -1,3 +1,4 @@
+import { useI18n } from "../../i18n";
 type PropsToggleFrontBack = {
   onClic: () => void;
   frontBack: string;
@@ -9,6 +10,7 @@ const ToggleFrontBack = ({
   frontBack,
   normalShiny,
 }: PropsToggleFrontBack) => {
+  const { t } = useI18n();
   const isBack = frontBack === "BACK";
 
   return (
@@ -31,7 +33,7 @@ const ToggleFrontBack = ({
       <p
         className={`order-1 font-bold ${normalShiny !== "NORMAL" ? "bg-gradient-to-r from-[#F04038] to-[#F8D030] bg-clip-text text-transparent text-shadow-lg" : "dark:text-slate-300"}`}
       >
-        {frontBack.toUpperCase()}
+        {t(isBack ? "back" : "front")}
       </p>
     </div>
   );

@@ -1,3 +1,4 @@
+import { useI18n } from "../../i18n";
 type PropsToggleCard = {
   changeTypeFunction: () => void;
   isNormal: boolean;
@@ -9,6 +10,7 @@ const ToggleCard = ({
   isNormal,
   idPokemon,
 }: PropsToggleCard) => {
+  const { t } = useI18n();
   return (
     <div
       className={`toggle-card flex items-center gap-3 ${
@@ -31,7 +33,7 @@ const ToggleCard = ({
         Normal / Shiny
       </label>
       <p className={`order-1 font-bold ${!isNormal ? "text-shadow-lg" : ""}`}>
-        {isNormal ? "NORMAL" : "SHINY"}
+        {t(isNormal ? "normal" : "shiny")}
       </p>
     </div>
   );

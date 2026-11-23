@@ -1,3 +1,4 @@
+import { useI18n } from "../../i18n";
 type PropsToggleFrontBackCard = {
   changeFrontFunction: () => void;
   isNormal: boolean;
@@ -11,6 +12,7 @@ const ToggleFrontBackCard = ({
   isNormal,
   idPokemonFront,
 }: PropsToggleFrontBackCard) => {
+  const { t } = useI18n();
   return (
     <div className="toggle-card flex items-center gap-3">
       <input
@@ -30,7 +32,7 @@ const ToggleFrontBackCard = ({
       <p
         className={`order-1 font-bold ${!isNormal ? "bg-gradient-to-r from-[#F04038] to-[#F8D030] bg-clip-text text-transparent text-shadow-lg" : ""}`}
       >
-        {isFront ? "FRONT" : "BACK"}
+        {t(isFront ? "front" : "back")}
       </p>
     </div>
   );
