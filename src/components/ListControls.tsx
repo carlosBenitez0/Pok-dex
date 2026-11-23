@@ -6,7 +6,7 @@ import { ROMAN } from "../utils/format";
 import Filter from "./Filter";
 
 const scrollRow =
-  "no-scrollbar -mx-4 flex snap-x items-center gap-3 overflow-x-auto px-4 py-1 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0";
+  "no-scrollbar -mx-[1.6rem] flex snap-x scroll-px-[1.6rem] items-center gap-3 overflow-x-auto px-[1.6rem] py-1 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0";
 
 export function GenerationTabs({ gen, onChange }: { gen: number; onChange: (g: number) => void }) {
   const { t } = useI18n();

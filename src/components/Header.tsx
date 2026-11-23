@@ -10,7 +10,7 @@ type Props = {
 function Header({ children }: Props) {
   return (
     <div className="z-10 flex w-full justify-center shadow-xl shadow-slate-500/10">
-      <header className="w-full max-w-[1280px] px-4 py-6 sm:px-8 sm:py-8">
+      <header className="w-full max-w-[1280px] px-[1.6rem] py-6 sm:px-8 sm:py-8">
         {children}
       </header>
     </div>
@@ -38,7 +38,7 @@ export function PageShell({ header, children }: { header: ReactNode; children: R
   return (
     <div className="relative min-h-screen w-full overflow-x-hidden bg-slate-100 text-[1.6rem] text-slate-900 dark:bg-[#0e1217] dark:text-slate-200">
       <Header>{header}</Header>
-      <main className="mx-auto w-full max-w-[1280px] px-4 pb-24 pt-8 sm:px-8 sm:pt-10">{children}</main>
+      <main className="mx-auto w-full max-w-[1280px] px-[1.6rem] pb-24 pt-8 sm:px-8 sm:pt-10">{children}</main>
     </div>
   );
 }
