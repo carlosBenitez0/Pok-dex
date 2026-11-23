@@ -1,3 +1,4 @@
+import { addZeros } from "../utils/format";
 import Filter from "./Filter";
 import { useState, useEffect } from "react";
 import ToggleCard from "./toggles/ToggleCard";
@@ -21,6 +22,7 @@ type ImageType = {
   shiny_b: string;
 };
 
+
 function Card({
   id,
   image,
@@ -42,12 +44,6 @@ function Card({
     setIsFront(frontBack === "FRONT");
   }, [frontBack]);
 
-  // Función para agregar ceros a los IDs de los Pokémon
-  function addZeros(id: number): string {
-    return id.toString().padStart(3, "0");
-  }
-
-  // Función para obtener la imagen según los estados de isNormal y isFront
   const getSelectedImage = (): string => {
     if (isNormal && isFront) return image.normal_f;
     if (isNormal && !isFront) return image.normal_b;
@@ -55,56 +51,56 @@ function Card({
     return image.shiny_b;
   };
 
-  const changeCardType = (): void => {
-    setIsNormal(!isNormal);
-  };
-
-  const changeCardFrontBack = (): void => {
-    setIsFront(!isFront);
-  };
-
   return (
-    <div
-      className={`flex flex-col gap-4 rounded-[1.3rem] border-2 border-[#d4d4d4] p-8 dark:border-2 dark:border-[#383d47] dark:text-slate-300 ${normalShiny === "SHINY" ? "border-black backdrop-blur-md dark:border-[#d4d4d4] dark:backdrop-blur-md" : "dark:bg-[#1c1f26]"} `}
+    <article
+      className={`flex min-w-0 flex-col gap-4 overflow-hidden rounded-[1.3rem] border-2 border-[#d4d4d4] p-6 sm:p-8 dark:border-2 dark:border-[#383d47] dark:text-slate-300 ${normalShiny === "SHINY" ? "border-black backdrop-blur-md dark:border-[#d4d4d4] dark:backdrop-blur-md" : "dark:bg-[#1c1f26]"}`}
     >
-      <div className="relative flex items-center justify-center pt-8">
-        <div className="absolute top-0 z-[1000] flex w-full items-center justify-center gap-4">
-          <ToggleCard
-            idPokemon={name}
-            changeTypeFunction={changeCardType}
-            isNormal={isNormal}
-          />
-          <ToggleFrontBackCard
-            changeFrontFunction={changeCardFrontBack}
-            isFront={isFront}
-            isNormal={isNormal}
-            idPokemonFront={name + "_fb"}
-          />
-        </div>
+      <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
+        <ToggleCard
+          idPokemon={name}
+          changeTypeFunction={() => setIsNormal((v) => !v)}
+          isNormal={isNormal}
+        />
+        <ToggleFrontBackCard
+          changeFrontFunction={() => setIsFront((v) => !v)}
+          isFront={isFront}
+          isNormal={isNormal}
+          idPokemonFront={name + "_fb"}
+        />
+      </div>
 
+      <div className="relative flex items-center justify-center">
         <p
-          className={`absolute text-9xl font-bold text-gray-300 ${normalShiny !== "SHINY" ? "dark:opacity-10" : "bg-gradient-to-r from-white to-gray-800 bg-clip-text text-transparent text-shadow-xl dark:bg-gradient-to-l"} `}
+          aria-hidden="true"
+          className={`pointer-events-none absolute select-none text-7xl font-bold text-gray-300 sm:text-8xl xl:text-9xl ${normalShiny !== "SHINY" ? "dark:opacity-10" : "bg-gradient-to-r from-white to-gray-800 bg-clip-text text-transparent text-shadow-xl dark:bg-gradient-to-l"}`}
         >
           #{addZeros(id)}
         </p>
-        <img src={getSelectedImage()} alt={name} className="z-10" />
+        <img
+          src={getSelectedImage()}
+          alt={name}
+          width={96}
+          height={96}
+          loading="lazy"
+          className="z-10 h-48 w-48 [image-rendering:pixelated]"
+        />
       </div>
 
       <div className="flex flex-col gap-4">
-        <div className="flex items-center justify-center gap-4">
+        <div className="flex flex-wrap items-center justify-center gap-4">
           <p
             className={`w-fit rounded-full bg-[rgba(107,114,128,0.1)] px-4 py-3 font-medium ${normalShiny === "SHINY" ? "bg-black text-gray-200 shadow-md shadow-slate-800 text-shadow-xl dark:bg-gray-300 dark:text-black dark:shadow-slate-500" : ""}`}
           >
             #{addZeros(id)}
           </p>
-          <p
-            className={`text-3xl font-bold ${normalShiny === "SHINY" ? "text-shadow-xl dark:text-gray-300" : ""}`}
+          <h2
+            className={`break-all text-[2.2rem] font-bold sm:text-3xl ${normalShiny === "SHINY" ? "text-shadow-xl dark:text-gray-300" : ""}`}
           >
             {name.toUpperCase()}
-          </p>
+          </h2>
         </div>
 
-        <div className="flex items-center justify-center gap-4">
+        <div className="flex flex-wrap items-center justify-center gap-4">
           {filters.map((filter) => (
             <Filter
               key={filter}
@@ -116,7 +112,7 @@ function Card({
           ))}
         </div>
       </div>
-    </div>
+    </article>
   );
 }
 

@@ -1,35 +1,40 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { IResponse } from "../interfaces/IResponse";
+import { API, fetchJson } from "../api/pokeapi";
+
+export const TOTAL_POKEMON = 151;
+
+// Resultado compartido entre montajes: al volver del detalle no hay loader.
+let cachedList: (IResponse | null)[] | null = null;
+
+const getPokemonData = async (id: number): Promise<IResponse | null> => {
+  try {
+    return await fetchJson<IResponse>(`${API}/pokemon-form/${id}/`, true);
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
 
 export const usePokemonData = () => {
-  const [pokemonData, setPokemonData] = useState<(IResponse | null)[]>([]);
-  const [loader, setLoader] = useState(true);
-
-  const getPokemonData = async (id: number): Promise<IResponse | null> => {
-    const endPoint: string = `https://pokeapi.co/api/v2/pokemon-form/${id}/`;
-    try {
-      const response = await axios.get(endPoint);
-      return response.data;
-    } catch (error) {
-      console.log(error);
-      return null;
-    }
-  };
+  const [pokemonData, setPokemonData] = useState<(IResponse | null)[]>(
+    () => cachedList ?? [],
+  );
+  const [loader, setLoader] = useState(cachedList === null);
 
   useEffect(() => {
-    const getAllPokemon = async (): Promise<void> => {
-      const promises = [];
-      for (let i = 1; i <= 151; i++) {
-        promises.push(getPokemonData(i));
-      }
-      const results = await Promise.all(promises);
-
+    if (cachedList) return;
+    let cancelled = false;
+    const ids = Array.from({ length: TOTAL_POKEMON }, (_, i) => i + 1);
+    Promise.all(ids.map(getPokemonData)).then((results) => {
+      cachedList = results;
+      if (cancelled) return;
       setPokemonData(results);
       setLoader(false);
+    });
+    return () => {
+      cancelled = true;
     };
-
-    getAllPokemon();
   }, []);
 
   return { pokemonData, loader };

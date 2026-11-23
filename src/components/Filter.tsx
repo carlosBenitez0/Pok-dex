@@ -5,6 +5,7 @@ type Props = {
   filterColor: string;
   selectedFilter: string;
   changeFilter: (filterName: string) => void;
+  size?: "md" | "sm";
 };
 
 function Filter({
@@ -12,14 +13,20 @@ function Filter({
   filterColor,
   selectedFilter,
   changeFilter,
+  size = "md",
 }: Props) {
+  const isSelected = selectedFilter === filterName;
+  const label = filterName.split("_")[0].toUpperCase();
+
   return (
-    <div
-      className={`user-none flex cursor-pointer items-center rounded-full bg-[#ececec] px-6 py-3 font-medium shadow-[0_0.4rem_1.5rem_rgba(0,0,0,0.219)] hover:scale-110 dark:text-[#0e1217] ${selectedFilter == filterName ? "transform bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-[0.3rem_0.3rem_0.1rem_#000000] dark:text-white dark:shadow-[0.3rem_0.3rem_0.1rem_#00ffff]" : filterColor}`}
+    <button
+      type="button"
+      aria-pressed={isSelected}
+      className={`flex shrink-0 cursor-pointer select-none snap-start items-center rounded-full bg-[#ececec] font-medium shadow-[0_0.4rem_1.5rem_rgba(0,0,0,0.219)] transition-transform hover:scale-110 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500 dark:text-[#0e1217] ${size === "sm" ? "px-4 py-2 text-[1.3rem]" : "px-6 py-3"} ${isSelected ? "bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-[0.3rem_0.3rem_0.1rem_#000000] dark:text-white dark:shadow-[0.3rem_0.3rem_0.1rem_#00ffff]" : `type-${filterColor}`}`}
       onClick={() => changeFilter(filterName)}
     >
-      <p className="filter-text">{filterName.split("_")[0].toUpperCase()}</p>
-    </div>
+      <span className="filter-text">{label}</span>
+    </button>
   );
 }
 

@@ -6,10 +6,10 @@ type Props = {
 
 function Header({ children }: Props) {
   return (
-    <div
-      className={`z-10 flex w-full items-center justify-center shadow-xl shadow-slate-500/10`}
-    >
-      <header className="w-3/4 p-8">{children}</header>
+    <div className="z-10 flex w-full justify-center shadow-xl shadow-slate-500/10">
+      <header className="w-full max-w-7xl px-4 py-6 sm:px-8 sm:py-8">
+        {children}
+      </header>
     </div>
   );
 }
@@ -19,8 +19,8 @@ type logoProps = {
 };
 export function Logo({ urlLogo }: logoProps) {
   return (
-    <div className="logo-container">
-      <img src={urlLogo} alt="Logo Pokédex" className="h-16" />
+    <div className="logo-container shrink-0">
+      <img src={urlLogo} alt="Pokédex" className="h-12 w-auto sm:h-16" />
     </div>
   );
 }

@@ -1,44 +1,63 @@
 import { useEffect, useState } from "react";
 
+type Theme = "light" | "dark";
+
+const readInitialTheme = (): Theme => {
+  try {
+    const stored = window.localStorage.getItem("theme");
+    if (stored === "light" || stored === "dark") return stored;
+  } catch {
+    /* storage no disponible */
+  }
+  return window.matchMedia("(prefers-color-scheme: dark)").matches
+    ? "dark"
+    : "light";
+};
+
 function ButtonDarkMode() {
-  const [currentTheme, setCurrentTheme] = useState<string>(() => {
-    if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-      return "dark";
-    }
-    return "light";
-  });
+  const [currentTheme, setCurrentTheme] = useState<Theme>(readInitialTheme);
 
   const toggleTheme = () => {
-    setCurrentTheme(currentTheme === "light" ? "dark" : "light");
+    const next: Theme = currentTheme === "light" ? "dark" : "light";
+    setCurrentTheme(next);
+    try {
+      window.localStorage.setItem("theme", next);
+    } catch {
+      /* storage no disponible */
+    }
   };
 
+  // Sigue al sistema solo si el usuario no eligió un tema manualmente.
   useEffect(() => {
     const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
     const handleThemeChange = (e: MediaQueryListEvent) => {
+      try {
+        if (window.localStorage.getItem("theme")) return;
+      } catch {
+        /* sin storage: seguimos al sistema */
+      }
       setCurrentTheme(e.matches ? "dark" : "light");
     };
-
     mediaQuery.addEventListener("change", handleThemeChange);
-
-    return () => {
-      mediaQuery.removeEventListener("change", handleThemeChange);
-    };
+    return () => mediaQuery.removeEventListener("change", handleThemeChange);
   }, []);
 
   useEffect(() => {
-    if (currentTheme === "dark") {
-      document.querySelector("#root")?.classList.add("dark");
-    } else {
-      document.querySelector("#root")?.classList.remove("dark");
-    }
+    document
+      .querySelector("#root")
+      ?.classList.toggle("dark", currentTheme === "dark");
   }, [currentTheme]);
 
+  const isLight = currentTheme === "light";
+
   return (
-    <div
-      className="text-gradient-to-r flex cursor-pointer items-center rounded-full bg-[#233b53] from-cyan-500 to-blue-500 p-2 hover:bg-[#2c3e70] dark:bg-[#444444] dark:hover:bg-[#666666]"
+    <button
+      type="button"
       onClick={toggleTheme}
+      aria-label={isLight ? "Activar modo oscuro" : "Activar modo claro"}
+      className="flex shrink-0 cursor-pointer items-center rounded-full bg-[#233b53] p-2 hover:bg-[#2c3e70] focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-500 dark:bg-[#444444] dark:hover:bg-[#666666]"
     >
-      {currentTheme === "light" ? (
+      {isLight ? (
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -46,17 +65,12 @@ function ButtonDarkMode() {
           strokeWidth="1.5"
           stroke="url(#blueGradient)"
           className="size-12"
+          aria-hidden="true"
         >
           <defs>
             <linearGradient id="blueGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop
-                offset="0%"
-                style={{ stopColor: "#1E90FF", stopOpacity: 1 }}
-              />
-              <stop
-                offset="100%"
-                style={{ stopColor: "#00BFFF", stopOpacity: 1 }}
-              />
+              <stop offset="0%" stopColor="#1E90FF" />
+              <stop offset="100%" stopColor="#00BFFF" />
             </linearGradient>
           </defs>
           <path
@@ -73,17 +87,12 @@ function ButtonDarkMode() {
           strokeWidth="1.5"
           stroke="url(#goldGradient)"
           className="size-12"
+          aria-hidden="true"
         >
           <defs>
             <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop
-                offset="0%"
-                style={{ stopColor: "#FFD700", stopOpacity: 1 }}
-              />
-              <stop
-                offset="100%"
-                style={{ stopColor: "#FFA500", stopOpacity: 1 }}
-              />
+              <stop offset="0%" stopColor="#FFD700" />
+              <stop offset="100%" stopColor="#FFA500" />
             </linearGradient>
           </defs>
           <path
@@ -93,7 +102,7 @@ function ButtonDarkMode() {
           />
         </svg>
       )}
-    </div>
+    </button>
   );
 }
 
