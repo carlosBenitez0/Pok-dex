@@ -1,17 +1,14 @@
+import { Pokeball } from "./Pokeball";
+
 export const Loader = ({ label = "Cargando Pokémon…" }: { label?: string }) => {
   return (
     <div
       role="status"
       aria-live="polite"
-      className="relative flex h-40 items-center justify-center"
+      className="flex flex-col items-center justify-center gap-4 py-8"
     >
-      <div className="absolute h-full w-32 animate-spin rounded-full border-b-4 border-t-4 border-purple-500"></div>
-      <img
-        src="https://res.cloudinary.com/dc69f3e0o/image/upload/v1727881849/Pokedex/vimesftm9x5kb4uytiz2.png"
-        alt=""
-        className="h-28 w-28 rounded-full object-cover"
-      />
-      <span className="sr-only">{label}</span>
+      <Pokeball className="size-24 animate-[spin_1.1s_linear_infinite] motion-reduce:animate-none" />
+      <span className="font-medium text-slate-500 dark:text-slate-400">{label}</span>
     </div>
   );
 };

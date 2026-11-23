@@ -38,7 +38,7 @@ function HomePage() {
           <div className="mb-6 flex flex-col gap-6 sm:mb-8">
             {/* Móvil: logo + modo oscuro arriba, búsqueda a todo el ancho abajo */}
             <div className="flex flex-wrap items-center justify-between gap-4 sm:flex-nowrap sm:gap-8">
-              <Logo urlLogo="https://res.cloudinary.com/dc69f3e0o/image/upload/v1726878134/Pokedex/giyntoth5j2dy870vuud.png" />
+              <Logo />
               <div className="order-3 w-full sm:order-2 sm:flex-1">
                 <Search onSearchChange={setSearch} />
               </div>
@@ -76,7 +76,7 @@ function HomePage() {
           </div>
         </Header>
 
-        <main className="mx-auto w-full max-w-7xl px-4 pb-12 pt-8 sm:px-8 sm:pt-12">
+        <main className="mx-auto w-full max-w-[1280px] px-4 pb-12 pt-8 sm:px-8 sm:pt-12">
           {loader ? (
             <div className="flex w-full justify-center">
               <Loader />
@@ -86,7 +86,7 @@ function HomePage() {
               Ningún Pokémon coincide con «{debouncedSearch}».
             </p>
           ) : (
-            <div className="grid grid-cols-1 gap-6 min-[480px]:grid-cols-2 sm:gap-8 md:grid-cols-3 xl:grid-cols-4">
+            <div className="grid grid-cols-[repeat(auto-fill,minmax(min(100%,24rem),1fr))] gap-6 sm:gap-8">
               {listOfPokemons.map((pokemon) => (
                 <Card
                   key={pokemon.id}

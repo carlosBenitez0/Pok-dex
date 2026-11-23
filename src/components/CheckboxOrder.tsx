@@ -1,29 +1,55 @@
 interface Props {
   sortOrDisorder: () => void;
   normalShiny: string;
-  checked: boolean;
+  checked: boolean; // true = A-Z, false = por número
 }
 
-export const CheckboxOrder = ({
-  sortOrDisorder,
-  normalShiny,
-  checked,
-}: Props) => {
+const OPTIONS = [
+  { sorted: false, label: "Nº", title: "Ordenar por número" },
+  { sorted: true, label: "A-Z", title: "Ordenar alfabéticamente" },
+];
+
+/** Control segmentado Nº / A-Z (sustituye al checkbox "sorted/disordered"). */
+export const CheckboxOrder = ({ sortOrDisorder, normalShiny, checked }: Props) => {
+  const shiny = normalShiny === "SHINY";
+
   return (
-    <div className="flex items-center">
-      <input
-        id="checked-checkbox"
-        type="checkbox"
-        checked={checked}
-        onChange={sortOrDisorder}
-        className={`h-6 w-6 cursor-pointer rounded border-gray-300 bg-gray-100 text-blue-600 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600 ${normalShiny === "SHINY" ? "shadow-[0_0_10px_blue] dark:shadow-[0_0_10px_2px_blue]" : ""}`}
-      />
-      <label
-        htmlFor="checked-checkbox"
-        className={`ml-2 cursor-pointer font-bold uppercase ${normalShiny === "SHINY" ? "bg-gradient-to-r from-blue-400 to-blue-800 bg-clip-text text-transparent text-shadow-lg dark:from-blue-600 dark:via-blue-800 dark:to-transparent dark:bg-[length:100%_90%]" : "dark:text-gray-300"}`}
+    <div className="flex items-center gap-3">
+      <span
+        id="sort-label"
+        className={`font-bold ${shiny ? "text-shadow-lg" : "dark:text-slate-300"}`}
       >
-        {checked ? "Sorted" : "disordered"}
-      </label>
+        ORDEN
+      </span>
+      <div
+        role="radiogroup"
+        aria-labelledby="sort-label"
+        className={`relative grid grid-cols-2 rounded-full p-1 ${shiny ? "bg-gradient-to-r from-charizard-shiny-black to-[#1e3a8a] shadow-md shadow-slate-800" : "bg-slate-200 dark:bg-[#1c1f26]"}`}
+      >
+        {/* Pastilla deslizante */}
+        <span
+          aria-hidden="true"
+          className={`absolute inset-y-1 left-1 w-[calc(50%-0.4rem)] rounded-full shadow transition-transform duration-200 ease-out motion-reduce:transition-none ${checked ? "translate-x-full" : "translate-x-0"} ${shiny ? "bg-gradient-to-r from-metagross-normal-gray-blue to-metagross-shiny-silver" : "bg-blue-600"}`}
+        />
+        {OPTIONS.map((o) => {
+          const active = checked === o.sorted;
+          return (
+            <button
+              key={o.label}
+              type="button"
+              role="radio"
+              aria-checked={active}
+              title={o.title}
+              onClick={() => {
+                if (!active) sortOrDisorder();
+              }}
+              className={`relative z-10 min-w-[4.4rem] rounded-full px-4 py-1.5 text-[1.3rem] font-bold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500 ${active ? (shiny ? "text-slate-900" : "text-white") : shiny ? "text-slate-300" : "text-slate-500 dark:text-slate-400"}`}
+            >
+              {o.label}
+            </button>
+          );
+        })}
+      </div>
     </div>
   );
 };

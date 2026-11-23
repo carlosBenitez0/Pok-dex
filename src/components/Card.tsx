@@ -77,7 +77,7 @@ function Card({
         <div className="relative flex items-center justify-center">
           <p
             aria-hidden="true"
-            className={`pointer-events-none absolute select-none text-7xl font-bold text-gray-300 sm:text-8xl xl:text-9xl ${normalShiny !== "SHINY" ? "dark:opacity-10" : "bg-gradient-to-r from-white to-gray-800 bg-clip-text text-transparent text-shadow-xl dark:bg-gradient-to-l"}`}
+            className={`pointer-events-none absolute select-none text-7xl font-bold text-gray-300 sm:text-8xl ${normalShiny !== "SHINY" ? "dark:opacity-10" : "bg-gradient-to-r from-white to-gray-800 bg-clip-text text-transparent text-shadow-xl dark:bg-gradient-to-l"}`}
           >
             #{addZeros(id)}
           </p>
@@ -98,7 +98,7 @@ function Card({
             #{addZeros(id)}
           </p>
           <h2
-            className={`break-all text-[2.2rem] font-bold sm:text-3xl ${normalShiny === "SHINY" ? "text-shadow-xl dark:text-gray-300" : ""}`}
+            className={`break-words text-center text-[2.2rem] font-bold ${normalShiny === "SHINY" ? "text-shadow-xl dark:text-gray-300" : ""}`}
           >
             {name.toUpperCase()}
           </h2>

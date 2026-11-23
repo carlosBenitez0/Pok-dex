@@ -164,9 +164,11 @@ export async function loadPokemonDetail(id: number): Promise<PokemonDetail> {
     cry: pokemon.cries?.latest ?? pokemon.cries?.legacy ?? null,
     sprites: {
       front: gba?.front_default ?? gen3?.emerald?.front_default ?? pokemon.sprites.front_default,
-      back: gba?.back_default ?? pokemon.sprites.back_default ?? null,
+      // Las espaldas de Gen III vienen recortadas por abajo (las tapaba la UI de
+      // combate), así que usamos las espaldas completas por defecto.
+      back: pokemon.sprites.back_default ?? gba?.back_default ?? null,
       frontShiny: gba?.front_shiny ?? pokemon.sprites.front_shiny ?? null,
-      backShiny: gba?.back_shiny ?? pokemon.sprites.back_shiny ?? null,
+      backShiny: pokemon.sprites.back_shiny ?? gba?.back_shiny ?? null,
       artwork: pokemon.sprites.other?.["official-artwork"]?.front_default ?? null,
     },
   };

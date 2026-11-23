@@ -12,7 +12,7 @@ import { addZeros } from "../utils/format";
 const MAX_ID = 1025;
 
 const SHELLS = [
-  { id: "indigo", label: "Índigo", color: "#4b3d9e", translucent: true },
+  { id: "indigo", label: "Índigo", color: "#5a4fb6", translucent: true },
   { id: "glacier", label: "Glaciar", color: "#a9c8e8", translucent: true },
   { id: "black", label: "Negro", color: "#2b2b33", translucent: false },
   { id: "fuchsia", label: "Fucsia", color: "#cf3f7a", translucent: false },
@@ -141,7 +141,7 @@ export default function PokemonDetailPage() {
           <span aria-hidden="true">←</span> Pokédex
         </Link>
 
-        <h1 className="min-w-0 flex-1 truncate text-[1.8rem] font-bold sm:text-[2.2rem]">
+        <h1 className="min-w-0 flex-1 truncate py-1 text-[1.8rem] font-bold leading-normal sm:text-[2.2rem]">
           {data ? (
             <>
               <span className="text-slate-400">#{addZeros(data.id)}</span>{" "}
