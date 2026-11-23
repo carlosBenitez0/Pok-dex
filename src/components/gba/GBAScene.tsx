@@ -15,7 +15,6 @@ export type ViewMode = "full" | "screen";
 
 export type GBASceneHandle = {
   press: (btn: GBAButton) => void;
-  spin: (dir: 1 | -1) => void;
 };
 
 type Props = {
@@ -83,7 +82,7 @@ const ConsoleRig = forwardRef<GBASceneHandle, RigProps>(function ConsoleRig(
   { shellColor, translucent, view, onButton, screen },
   ref,
 ) {
-  const intro = useRef<THREE.Group>(null); // entrada + giro al cambiar de Pokémon
+  const intro = useRef<THREE.Group>(null); // animación de entrada
   const float = useRef<THREE.Group>(null); // flotación idle
   const tilt = useRef<THREE.Group>(null); // sigue al puntero
   const model = useRef<GBAModelHandle>(null);
@@ -92,15 +91,6 @@ const ConsoleRig = forwardRef<GBASceneHandle, RigProps>(function ConsoleRig(
 
   useImperativeHandle(ref, () => ({
     press: (btn) => model.current?.press(btn),
-    spin: (dir) => {
-      if (!intro.current || prefersReducedMotion()) return;
-      gsap.killTweensOf(intro.current.rotation);
-      gsap.fromTo(
-        intro.current.rotation,
-        { y: 0 },
-        { y: dir * Math.PI * 2, duration: 0.8, ease: "power3.inOut", onComplete: () => { intro.current!.rotation.y = 0; } },
-      );
-    },
   }));
 
   // Entrada: la consola sube girando, aterriza y se enciende el LED.

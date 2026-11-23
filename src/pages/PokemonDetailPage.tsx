@@ -84,8 +84,8 @@ export default function PokemonDetailPage() {
   }, [data, state.status]);
 
   const goTo = useCallback(
-    (next: number, dir: 1 | -1) => {
-      scene.current?.spin(dir);
+    (next: number) => {
+      // Solo un pequeño glitch en la pantalla; la consola no gira.
       screen.current?.glitch();
       navigate(`/pokemon/${next}`, { replace: true });
     },
@@ -116,9 +116,9 @@ export default function PokemonDetailPage() {
       case "b":
         return navigate("/");
       case "l":
-        return goTo(wrapId(id - 1), -1);
+        return goTo(wrapId(id - 1));
       case "r":
-        return goTo(wrapId(id + 1), 1);
+        return goTo(wrapId(id + 1));
       case "start":
         setTab(0);
         return setShiny((s) => !s);
@@ -207,7 +207,7 @@ export default function PokemonDetailPage() {
               booted={booted}
               onBootDone={() => setBooted(true)}
               onNavigate={(n) => {
-                if (n !== id) goTo(n, n > id ? 1 : -1);
+                if (n !== id) goTo(n);
               }}
             />
           }

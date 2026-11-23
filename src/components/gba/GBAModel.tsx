@@ -149,21 +149,22 @@ const GBAModel = forwardRef<GBAModelHandle, Props>(function GBAModel(
   const slot = useMemo(() => tint(shellColor, -0.6), [shellColor]);
   const engraving = useMemo(() => tint(shellColor, 0.45), [shellColor]);
 
-  // Topes grises de las esquinas superiores (y gatillos L/R): un arco de toro
-  // que sigue la elipse del contorno. El grupo escala; el toro rota dentro,
+  // Gatillos L/R: piezas grises pequeñas en las esquinas superiores, montadas
+  // hacia la parte trasera (como en la GBA real). Son un arco corto de toro
+  // que sigue la elipse del contorno; el grupo escala y el toro rota dentro,
   // así la escala no se deforma con la rotación.
   const bumper = (side: 1 | -1, refObj: typeof l, name: GBAButton) => {
-    const startAngle = 0.12;
-    const arc = 1.32;
+    const startAngle = 0.5; // ≈ 29° desde la horizontal
+    const arc = 0.78; // ≈ 45° de recorrido: solo la esquina
     const rotationZ = side === 1 ? startAngle : Math.PI - startAngle - arc;
     return (
       <group
         ref={refObj}
-        position={[side * HALF_STRAIGHT, 0, -0.01]}
-        scale={[RADIUS_X + BEVEL * 0.9, RADIUS_Y + BEVEL * 0.9, 2.1]}
+        position={[side * HALF_STRAIGHT, 0, -0.07]}
+        scale={[RADIUS_X + BEVEL * 0.9, RADIUS_Y + BEVEL * 0.9, 1.6]}
       >
         <mesh rotation={[0, 0, rotationZ]} onPointerDown={click(name)} {...hover} castShadow>
-          <torusGeometry args={[1, 0.14, 24, 64, arc]} />
+          <torusGeometry args={[1, 0.13, 24, 48, arc]} />
           <meshStandardMaterial color={BUMPER_GRAY} roughness={0.55} />
         </mesh>
       </group>
