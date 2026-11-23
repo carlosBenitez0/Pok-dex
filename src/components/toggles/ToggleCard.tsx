@@ -13,7 +13,7 @@ const ToggleCard = ({
     <div
       className={`toggle-card flex items-center gap-3 ${
         !isNormal
-          ? "bg-gradient-to-r from-[#36403E] to-[#F04038] bg-clip-text text-transparent"
+          ? "bg-gradient-to-r from-[#36403E] to-[#F04038] bg-clip-text text-transparent dark:from-slate-200 dark:to-[#F04038]"
           : ""
       }`}
     >

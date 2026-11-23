@@ -17,7 +17,7 @@ export const CheckboxOrder = ({ sortOrDisorder, normalShiny, checked }: Props) =
     <div className="flex items-center gap-3">
       <span
         id="sort-label"
-        className={`font-bold ${shiny ? "text-shadow-lg" : "dark:text-slate-300"}`}
+        className={`font-bold text-slate-900 dark:text-slate-200 ${shiny ? "text-shadow-lg dark:[text-shadow:0_0_8px_rgb(59_130_246/0.6)]" : ""}`}
       >
         ORDEN
       </span>

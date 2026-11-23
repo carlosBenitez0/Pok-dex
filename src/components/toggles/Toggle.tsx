@@ -10,7 +10,7 @@ const Toggle = ({ onClic, typeOfPokemon }: Props) => {
     <div
       className={`flex items-center gap-2 font-bold ${
         isShiny
-          ? "bg-gradient-to-r from-charizard-shiny-black to-charizard-shiny-red bg-clip-text text-transparent"
+          ? "bg-gradient-to-r from-charizard-shiny-black to-charizard-shiny-red bg-clip-text text-transparent dark:from-slate-200 dark:to-charizard-shiny-red"
           : ""
       }`}
     >

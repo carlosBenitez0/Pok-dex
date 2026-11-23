@@ -7,7 +7,7 @@ import {
 } from "react";
 import * as THREE from "three";
 import { ThreeEvent } from "@react-three/fiber";
-import { RoundedBox, Text } from "@react-three/drei";
+import { Text } from "@react-three/drei";
 import gsap from "gsap";
 
 export type GBAButton =
@@ -34,41 +34,95 @@ type Props = {
   children?: ReactNode; // la pantalla (Html) se monta dentro del modelo
 };
 
-// Medidas en unidades de mundo (≈ 1 u = 31 mm de una GBA real).
-const HALF_STRAIGHT = 1.15; // mitad del tramo recto entre los dos “grips”
-const RADIUS_X = 1.15;
-const RADIUS_Y = 1.3;
+// ---------------------------------------------------------------------------
+// Proporciones tomadas de una GBA real (144.5 × 82 mm ≈ 1.76 : 1).
+// Silueta: rectángulo ancho con esquinas superiores cerradas (donde van L/R)
+// y esquinas inferiores amplias (los “grips”). 1 u ≈ 31 mm.
+// ---------------------------------------------------------------------------
+const HALF_W = 2.35;
+const TOP = 1.12;
+const BOTTOM = -1.22;
+const R_TOP = 0.78; // radio esquinas superiores
+const R_BOTTOM = 1.05; // radio esquinas inferiores
 const DEPTH = 0.42;
 const BEVEL = 0.08;
 export const FRONT_Z = DEPTH / 2 + BEVEL;
-export const SCREEN_CENTER = new THREE.Vector3(0, 0.16, FRONT_Z + 0.032);
-export const SCREEN_SIZE = { w: 1.92, h: 1.28 };
 
-// Paleta inspirada en la GBA original: botones y topes gris claro.
-const LIGHT_GRAY = "#cfcfd6";
+// Lente (cristal oscuro) y pantalla: la lente llega casi al borde superior.
+const LENS_W = 2.62;
+const LENS_TOP = 0.98;
+const LENS_BOTTOM = -0.96;
+export const SCREEN_SIZE = { w: 1.92, h: 1.28 };
+export const SCREEN_CENTER = new THREE.Vector3(
+  0,
+  LENS_TOP - 0.15 - SCREEN_SIZE.h / 2,
+  FRONT_Z + 0.032,
+);
+
+// Paleta de la GBA original: botones y gatillos gris claro, lente gris oscuro.
+const LIGHT_GRAY = "#d2d2d8";
 const BUMPER_GRAY = "#c4c5cc";
-const LENS = "#2c2c33";
+const LENS = "#34343b";
+
+/** Rectángulo con radios distintos arriba/abajo (sentido antihorario). */
+function roundedShape(
+  halfW: number,
+  top: number,
+  bottom: number,
+  rTop: number,
+  rBottom: number,
+  bottomBulge = 0,
+) {
+  // Los arcos se conectan solos con una recta desde el punto actual.
+  const p = new THREE.Path();
+  p.moveTo(-halfW + rBottom, bottom);
+  p.quadraticCurveTo(0, bottom - 2 * bottomBulge, halfW - rBottom, bottom); // borde inferior abombado
+  p.absarc(halfW - rBottom, bottom + rBottom, rBottom, -Math.PI / 2, 0, false);
+  p.absarc(halfW - rTop, top - rTop, rTop, 0, Math.PI / 2, false);
+  p.absarc(-halfW + rTop, top - rTop, rTop, Math.PI / 2, Math.PI, false);
+  p.absarc(-halfW + rBottom, bottom + rBottom, rBottom, Math.PI, (3 * Math.PI) / 2, false);
+
+  // Quitamos puntos casi duplicados (cos/sin no dan 0 exacto en π/2, π…):
+  // generan aristas de longitud ~1e-16 que rompen el bisel (la “muesca”).
+  const pts = p.getPoints(24);
+  const clean: THREE.Vector2[] = [];
+  for (const pt of pts) {
+    const last = clean[clean.length - 1];
+    if (!last || last.distanceTo(pt) > 1e-4) clean.push(pt);
+  }
+  if (clean.length > 1 && clean[0].distanceTo(clean[clean.length - 1]) < 1e-4) clean.pop();
+  return new THREE.Shape(clean);
+}
 
 function useShellGeometry() {
   return useMemo(() => {
-    // Empezamos en mitad del borde inferior para que la costura del
-    // contorno no caiga en la unión recta/curva (evita el “escalón”).
-    const s = new THREE.Shape();
-    s.moveTo(0, -RADIUS_Y);
-    s.lineTo(HALF_STRAIGHT, -RADIUS_Y);
-    s.absellipse(HALF_STRAIGHT, 0, RADIUS_X, RADIUS_Y, -Math.PI / 2, Math.PI / 2, false, 0);
-    s.lineTo(-HALF_STRAIGHT, RADIUS_Y);
-    s.absellipse(-HALF_STRAIGHT, 0, RADIUS_X, RADIUS_Y, Math.PI / 2, (3 * Math.PI) / 2, false, 0);
-    s.closePath();
+    const s = roundedShape(HALF_W, TOP, BOTTOM, R_TOP, R_BOTTOM, 0.04);
     const g = new THREE.ExtrudeGeometry(s, {
       depth: DEPTH,
       bevelEnabled: true,
       bevelThickness: BEVEL,
       bevelSize: BEVEL,
       bevelSegments: 10,
-      curveSegments: 96,
+      curveSegments: 64,
     });
     g.translate(0, 0, -DEPTH / 2);
+    g.computeVertexNormals();
+    return g;
+  }, []);
+}
+
+function useLensGeometry() {
+  return useMemo(() => {
+    // Lente con el borde inferior algo más ancho/abombado, como la real.
+    const s = roundedShape(LENS_W / 2, LENS_TOP, LENS_BOTTOM, 0.14, 0.3, 0.05);
+    const g = new THREE.ExtrudeGeometry(s, {
+      depth: 0.012,
+      bevelEnabled: true,
+      bevelThickness: 0.01,
+      bevelSize: 0.01,
+      bevelSegments: 3,
+      curveSegments: 32,
+    });
     g.computeVertexNormals();
     return g;
   }, []);
@@ -85,11 +139,19 @@ const tint = (hex: string, amount: number) => {
     : c.multiplyScalar(1 + amount).getStyle();
 };
 
+// Posiciones de los controles (frente)
+const DPAD = { x: -1.72, y: 0.36 };
+const START = { x: -1.44, y: -0.3 };
+const SELECT = { x: -1.56, y: -0.52 };
+const BTN_A = { x: 1.94, y: 0.1 };
+const BTN_B = { x: 1.56, y: -0.04 };
+
 const GBAModel = forwardRef<GBAModelHandle, Props>(function GBAModel(
   { shellColor, translucent, onButton, children },
   ref,
 ) {
   const shell = useShellGeometry();
+  const lens = useLensGeometry();
   const dpad = useRef<THREE.Group>(null);
   const a = useRef<THREE.Mesh>(null);
   const b = useRef<THREE.Mesh>(null);
@@ -101,7 +163,7 @@ const GBAModel = forwardRef<GBAModelHandle, Props>(function GBAModel(
 
   useImperativeHandle(ref, () => ({
     press(btn) {
-      const sink = (obj: THREE.Object3D | null, axis: "z" | "y" = "z", amount = -0.035) => {
+      const sink = (obj: THREE.Object3D | null, axis: "z" | "y" = "z", amount = -0.03) => {
         if (!obj) return;
         gsap.killTweensOf(obj.position);
         const base = obj.userData.base ?? (obj.userData.base = obj.position[axis]);
@@ -144,32 +206,58 @@ const GBAModel = forwardRef<GBAModelHandle, Props>(function GBAModel(
     onPointerOut: setCursor("auto"),
   };
 
-  // Tonos derivados de la carcasa: hundidos más oscuros, serigrafía más clara.
-  const recess = useMemo(() => tint(shellColor, -0.25), [shellColor]);
-  const slot = useMemo(() => tint(shellColor, -0.6), [shellColor]);
-  const engraving = useMemo(() => tint(shellColor, 0.45), [shellColor]);
+  // Tonos derivados de la carcasa: hundido muy sutil, ranuras y serigrafía.
+  const dimple = useMemo(() => tint(shellColor, -0.1), [shellColor]);
+  const slot = useMemo(() => tint(shellColor, -0.45), [shellColor]);
+  const engraving = useMemo(() => tint(shellColor, 0.4), [shellColor]);
 
-  // Gatillos L/R: piezas grises pequeñas en las esquinas superiores, montadas
-  // hacia la parte trasera (como en la GBA real). Son un arco corto de toro
-  // que sigue la elipse del contorno; el grupo escala y el toro rota dentro,
-  // así la escala no se deforma con la rotación.
+  // Gatillos L/R: tapas grises cortas en las esquinas superiores, hacia atrás.
+  // Siguen el arco de la esquina (radio R_TOP) con un toro parcial.
   const bumper = (side: 1 | -1, refObj: typeof l, name: GBAButton) => {
-    const startAngle = 0.5; // ≈ 29° desde la horizontal
-    const arc = 0.78; // ≈ 45° de recorrido: solo la esquina
+    const startAngle = 0.28;
+    const arc = 1.0;
     const rotationZ = side === 1 ? startAngle : Math.PI - startAngle - arc;
     return (
       <group
         ref={refObj}
-        position={[side * HALF_STRAIGHT, 0, -0.07]}
-        scale={[RADIUS_X + BEVEL * 0.9, RADIUS_Y + BEVEL * 0.9, 1.6]}
+        position={[side * (HALF_W - R_TOP), TOP - R_TOP, -0.05]}
+        scale={[1, 1, 1.55]}
       >
         <mesh rotation={[0, 0, rotationZ]} onPointerDown={click(name)} {...hover} castShadow>
-          <torusGeometry args={[1, 0.13, 24, 48, arc]} />
+          <torusGeometry args={[R_TOP + BEVEL * 0.8, 0.12, 24, 48, arc]} />
           <meshStandardMaterial color={BUMPER_GRAY} roughness={0.55} />
         </mesh>
       </group>
     );
   };
+
+  // Botón redondo gris con un hundimiento apenas más oscuro que la carcasa.
+  const roundButton = (
+    name: GBAButton,
+    refObj: typeof a,
+    x: number,
+    y: number,
+    radius: number,
+    height: number,
+  ) => (
+    <group key={name}>
+      <mesh position={[x, y, FRONT_Z - 0.003]} rotation={[Math.PI / 2, 0, 0]}>
+        <cylinderGeometry args={[radius * 1.18, radius * 1.18, 0.012, 48]} />
+        <meshStandardMaterial color={dimple} roughness={0.55} />
+      </mesh>
+      <mesh
+        ref={refObj}
+        position={[x, y, FRONT_Z + height / 2 - 0.005]}
+        rotation={[Math.PI / 2, 0, 0]}
+        onPointerDown={click(name)}
+        {...hover}
+        castShadow
+      >
+        <cylinderGeometry args={[radius * 0.96, radius, height, 48]} />
+        <meshStandardMaterial color={LIGHT_GRAY} roughness={0.42} />
+      </mesh>
+    </group>
+  );
 
   return (
     <group>
@@ -177,11 +265,11 @@ const GBAModel = forwardRef<GBAModelHandle, Props>(function GBAModel(
       <mesh geometry={shell} castShadow receiveShadow>
         <meshPhysicalMaterial
           color={shellColor}
-          roughness={0.48}
+          roughness={0.5}
           metalness={0}
-          clearcoat={0.35}
-          clearcoatRoughness={0.4}
-          transmission={translucent ? 0.22 : 0}
+          clearcoat={0.3}
+          clearcoatRoughness={0.45}
+          transmission={translucent ? 0.2 : 0}
           thickness={0.6}
           ior={1.45}
         />
@@ -190,19 +278,19 @@ const GBAModel = forwardRef<GBAModelHandle, Props>(function GBAModel(
       {bumper(-1, l, "l")}
       {bumper(1, r, "r")}
 
-      {/* Lente de la pantalla */}
-      <RoundedBox args={[2.46, 1.78, 0.05]} radius={0.12} smoothness={6} position={[0, 0.12, FRONT_Z + 0.005]}>
-        <meshPhysicalMaterial color={LENS} roughness={0.25} clearcoat={1} clearcoatRoughness={0.1} />
-      </RoundedBox>
-      <mesh position={[0, SCREEN_CENTER.y, FRONT_Z + 0.032]}>
-        <planeGeometry args={[SCREEN_SIZE.w + 0.04, SCREEN_SIZE.h + 0.04]} />
+      {/* Lente: una sola pieza plana pegada a la carcasa (sin doble borde) */}
+      <mesh geometry={lens} position={[0, 0, FRONT_Z - 0.006]}>
+        <meshStandardMaterial color={LENS} roughness={0.22} metalness={0.1} />
+      </mesh>
+      <mesh position={[0, SCREEN_CENTER.y, FRONT_Z + 0.022]}>
+        <planeGeometry args={[SCREEN_SIZE.w + 0.03, SCREEN_SIZE.h + 0.03]} />
         <meshBasicMaterial color="#0b0f0d" />
       </mesh>
       <Text
-        position={[-0.05, -0.62, FRONT_Z + 0.034]}
+        position={[-0.04, LENS_BOTTOM + 0.2, FRONT_Z + 0.024]}
         fontSize={0.085}
-        letterSpacing={0.06}
-        color="#d9d9e2"
+        letterSpacing={0.04}
+        color="#e4e4ea"
         anchorX="right"
         anchorY="middle"
         fontWeight={700}
@@ -210,10 +298,10 @@ const GBAModel = forwardRef<GBAModelHandle, Props>(function GBAModel(
         POKéDEX
       </Text>
       <Text
-        position={[0.0, -0.62, FRONT_Z + 0.034]}
+        position={[0.01, LENS_BOTTOM + 0.2, FRONT_Z + 0.024]}
         fontSize={0.07}
-        letterSpacing={0.2}
-        color="#d9d9e2"
+        letterSpacing={0.18}
+        color="#e4e4ea"
         anchorX="left"
         anchorY="middle"
       >
@@ -221,109 +309,86 @@ const GBAModel = forwardRef<GBAModelHandle, Props>(function GBAModel(
       </Text>
       {children}
 
-      {/* Marca en relieve arriba a la derecha (como el logo de la consola) */}
-      <Text position={[1.62, 0.98, FRONT_Z + 0.002]} fontSize={0.065} color={engraving} anchorX="center" letterSpacing={0.05}>
+      {/* Marca en relieve sobre la esquina superior derecha de la lente */}
+      <Text position={[1.62, 0.9, FRONT_Z + 0.002]} fontSize={0.065} color={engraving} anchorX="center" letterSpacing={0.05}>
         POKéDEX
       </Text>
 
-      {/* LED de encendido (arriba a la derecha, como en la GBA) */}
-      <mesh position={[1.42, 0.74, FRONT_Z + 0.006]}>
-        <sphereGeometry args={[0.028, 16, 16]} />
+      {/* LED de encendido */}
+      <mesh position={[1.52, 0.6, FRONT_Z + 0.006]}>
+        <sphereGeometry args={[0.026, 16, 16]} />
         <meshStandardMaterial ref={led} color="#3df57a" emissive="#3df57a" emissiveIntensity={0} />
       </mesh>
-      <Text position={[1.5, 0.74, FRONT_Z + 0.002]} fontSize={0.04} color={engraving} anchorX="left" anchorY="middle">
+      <Text position={[1.59, 0.6, FRONT_Z + 0.002]} fontSize={0.04} color={engraving} anchorX="left" anchorY="middle">
         POWER
       </Text>
 
-      {/* Cruceta */}
-      <mesh position={[-1.68, 0.18, FRONT_Z - 0.004]} rotation={[Math.PI / 2, 0, 0]}>
-        <cylinderGeometry args={[0.36, 0.36, 0.02, 64]} />
-        <meshStandardMaterial color={recess} roughness={0.6} />
+      {/* Cruceta: directamente sobre la carcasa, sin disco oscuro */}
+      <mesh position={[DPAD.x, DPAD.y, FRONT_Z - 0.003]} rotation={[Math.PI / 2, 0, 0]}>
+        <cylinderGeometry args={[0.33, 0.33, 0.012, 64]} />
+        <meshStandardMaterial color={dimple} roughness={0.55} />
       </mesh>
-      <group ref={dpad} position={[-1.68, 0.18, FRONT_Z + 0.04]}>
-        <RoundedBox args={[0.56, 0.18, 0.09]} radius={0.035} smoothness={4} castShadow>
-          <meshStandardMaterial color={LIGHT_GRAY} roughness={0.45} />
-        </RoundedBox>
-        <RoundedBox args={[0.18, 0.56, 0.09]} radius={0.035} smoothness={4} castShadow>
-          <meshStandardMaterial color={LIGHT_GRAY} roughness={0.45} />
-        </RoundedBox>
+      <group ref={dpad} position={[DPAD.x, DPAD.y, FRONT_Z + 0.035]}>
+        {[
+          [0.5, 0.165],
+          [0.165, 0.5],
+        ].map(([w, h], i) => (
+          <mesh key={i} castShadow>
+            <boxGeometry args={[w, h, 0.07]} />
+            <meshStandardMaterial color={LIGHT_GRAY} roughness={0.45} />
+          </mesh>
+        ))}
         {/* Hendidura central */}
-        <mesh position={[0, 0, 0.046]}>
-          <circleGeometry args={[0.05, 32]} />
-          <meshStandardMaterial color="#b4b4bd" roughness={0.6} />
+        <mesh position={[0, 0, 0.036]}>
+          <circleGeometry args={[0.045, 32]} />
+          <meshStandardMaterial color="#b9b9c1" roughness={0.6} />
         </mesh>
         {/* Zonas de clic invisibles por dirección */}
         {(
           [
-            ["up", 0, 0.18],
-            ["down", 0, -0.18],
-            ["left", -0.18, 0],
-            ["right", 0.18, 0],
+            ["up", 0, 0.17],
+            ["down", 0, -0.17],
+            ["left", -0.17, 0],
+            ["right", 0.17, 0],
           ] as const
         ).map(([dir, x, y]) => (
-          <mesh key={dir} position={[x, y, 0.06]} onPointerDown={click(dir)} {...hover}>
+          <mesh key={dir} position={[x, y, 0.05]} onPointerDown={click(dir)} {...hover}>
             <planeGeometry args={[0.2, 0.2]} />
             <meshBasicMaterial transparent opacity={0} depthWrite={false} />
           </mesh>
         ))}
       </group>
 
-      {/* START / SELECT: botones pequeños grises con serigrafía a la izquierda */}
-      {(
-        [
-          ["start", start, -1.42, -0.42] as const,
-          ["select", select, -1.36, -0.66] as const,
-        ]
-      ).map(([name, refObj, x, y]) => (
-        <group key={name}>
-          <mesh position={[x, y, FRONT_Z - 0.004]} rotation={[Math.PI / 2, 0, 0]}>
-            <cylinderGeometry args={[0.085, 0.085, 0.02, 32]} />
-            <meshStandardMaterial color={recess} roughness={0.6} />
-          </mesh>
-          <mesh ref={refObj} position={[x, y, FRONT_Z + 0.02]} rotation={[Math.PI / 2, 0, 0]} onPointerDown={click(name)} {...hover}>
-            <cylinderGeometry args={[0.06, 0.06, 0.05, 32]} />
-            <meshStandardMaterial color={LIGHT_GRAY} roughness={0.45} />
-          </mesh>
-          <Text position={[x - 0.13, y, FRONT_Z + 0.002]} fontSize={0.045} color={engraving} anchorX="right" anchorY="middle" letterSpacing={0.08}>
-            {name.toUpperCase()}
-          </Text>
-        </group>
-      ))}
+      {/* START / SELECT: pequeños, en diagonal bajo la cruceta */}
+      {roundButton("start", start, START.x, START.y, 0.055, 0.04)}
+      {roundButton("select", select, SELECT.x, SELECT.y, 0.055, 0.04)}
+      <Text position={[START.x - 0.11, START.y, FRONT_Z + 0.002]} fontSize={0.042} color={engraving} anchorX="right" anchorY="middle" letterSpacing={0.08}>
+        START
+      </Text>
+      <Text position={[SELECT.x - 0.11, SELECT.y, FRONT_Z + 0.002]} fontSize={0.042} color={engraving} anchorX="right" anchorY="middle" letterSpacing={0.08}>
+        SELECT
+      </Text>
 
-      {/* A / B: gris claro, B abajo-izquierda y A arriba-derecha */}
-      {(
-        [
-          ["a", a, 1.86, 0.2] as const,
-          ["b", b, 1.46, 0.02] as const,
-        ]
-      ).map(([name, refObj, x, y]) => (
-        <group key={name}>
-          <mesh position={[x, y, FRONT_Z - 0.004]} rotation={[Math.PI / 2, 0, 0]}>
-            <cylinderGeometry args={[0.185, 0.185, 0.02, 48]} />
-            <meshStandardMaterial color={recess} roughness={0.6} />
-          </mesh>
-          <mesh ref={refObj} position={[x, y, FRONT_Z + 0.045]} rotation={[Math.PI / 2, 0, 0]} onPointerDown={click(name)} {...hover} castShadow>
-            <cylinderGeometry args={[0.155, 0.16, 0.1, 48]} />
-            <meshStandardMaterial color={LIGHT_GRAY} roughness={0.4} />
-          </mesh>
-          <Text position={[x, y - 0.25, FRONT_Z + 0.002]} fontSize={0.075} color={engraving} anchorX="center" anchorY="middle">
-            {name.toUpperCase()}
-          </Text>
-        </group>
-      ))}
+      {/* A / B: más pequeños y juntos; B abajo-izquierda, A arriba-derecha */}
+      {roundButton("a", a, BTN_A.x, BTN_A.y, 0.13, 0.07)}
+      {roundButton("b", b, BTN_B.x, BTN_B.y, 0.13, 0.07)}
+      <Text position={[BTN_A.x, BTN_A.y - 0.21, FRONT_Z + 0.002]} fontSize={0.06} color={engraving} anchorX="center" anchorY="middle">
+        A
+      </Text>
+      <Text position={[BTN_B.x, BTN_B.y - 0.21, FRONT_Z + 0.002]} fontSize={0.06} color={engraving} anchorX="center" anchorY="middle">
+        B
+      </Text>
 
       {/* Altavoz: ranuras diagonales abajo a la derecha */}
       {Array.from({ length: 6 }, (_, i) => (
-        <RoundedBox
+        <mesh
           key={i}
-          args={[0.46 - i * 0.02, 0.035, 0.02]}
-          radius={0.012}
-          smoothness={2}
-          position={[1.62 + i * 0.012, -0.5 - i * 0.075, FRONT_Z - 0.002]}
+          position={[1.66 + i * 0.012, -0.5 - i * 0.07, FRONT_Z - 0.001]}
           rotation={[0, 0, 0.16]}
         >
+          <boxGeometry args={[0.4 - i * 0.02, 0.022, 0.012]} />
           <meshStandardMaterial color={slot} roughness={0.8} />
-        </RoundedBox>
+        </mesh>
       ))}
     </group>
   );
