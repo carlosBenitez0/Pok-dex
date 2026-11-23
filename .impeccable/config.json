@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "gradient-text",
+        "value": "*",
+        "files": [
+          "src/components/Card.tsx"
+        ],
+        "createdAt": "2026-11-23T22:22:46.685Z",
+        "reason": "user confirmed: keep the blurred/gradient background numbers on cards (explicit request)"
+      }
+    ]
+  }
+}
