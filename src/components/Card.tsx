@@ -141,7 +141,7 @@ function Card({ entry, selectedTypes, onTypeClick, normalShiny, frontBack }: Pro
         </div>
 
         {/* Pie: formas + acciones */}
-        <div className="mt-auto flex items-center gap-1 border-t border-slate-100 px-3 py-2 dark:border-white/5">
+        <div className="mt-auto flex items-center gap-1 border-t border-slate-100 py-2.5 pl-5 pr-3 dark:border-white/5">
           {formCount > 0 ? (
             <Link
               to={`/pokemon/${id}`}
@@ -153,7 +153,7 @@ function Card({ entry, selectedTypes, onTypeClick, normalShiny, frontBack }: Pro
               {t(formCount === 1 ? "card.forms.one" : "card.forms", { n: formCount })}
             </Link>
           ) : (
-            <span className="text-[1.2rem] font-medium text-slate-400 dark:text-slate-500">
+            <span className="rounded-full bg-slate-100 px-3 py-1 text-[1.2rem] font-semibold text-slate-500 dark:bg-white/5 dark:text-slate-400">
               {t("card.gen", { g: entry.gen })}
             </span>
           )}
