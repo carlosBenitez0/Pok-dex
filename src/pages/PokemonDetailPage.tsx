@@ -188,8 +188,101 @@ export default function PokemonDetailPage() {
 
   useGBAControls(handleButton);
 
-  const pill =
-    "rounded-full bg-white/10 px-4 py-2 font-medium hover:bg-white/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-400";
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const settingsRef = useRef<HTMLDivElement>(null);
+
+  // Cerrar el panel de ajustes al pulsar fuera o con Esc.
+  useEffect(() => {
+    if (!settingsOpen) return;
+    const onDown = (e: globalThis.PointerEvent) => {
+      const target = e.target as Node;
+      if (settingsRef.current?.contains(target) || headerRef.current?.contains(target)) return;
+      setSettingsOpen(false);
+    };
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setSettingsOpen(false);
+    window.addEventListener("pointerdown", onDown);
+    window.addEventListener("keydown", onKey);
+    return () => {
+      window.removeEventListener("pointerdown", onDown);
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [settingsOpen]);
+
+  const shellSwatches = (size: string) => (
+    <fieldset className="flex items-center gap-2">
+      <legend className="sr-only">{t("detail.shell")}</legend>
+      {SHELLS.map((s) => {
+        const c = s.id === "type" ? shellColor : s.color;
+        return (
+          <button
+            key={s.id}
+            type="button"
+            title={s[lang]}
+            aria-label={`${t("detail.shell")}: ${s[lang]}`}
+            aria-pressed={shellId === s.id}
+            onClick={() => {
+              setShellId(s.id);
+              writeRaw("gbaShell", s.id);
+            }}
+            className={`${size} rounded-full border-2 transition-transform hover:scale-110 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400 ${shellId === s.id ? "scale-110 border-white" : "border-white/30"}`}
+            style={{ background: s.id === "type" ? `conic-gradient(${c} 0 50%, #f4f1de 50% 100%)` : c }}
+          />
+        );
+      })}
+    </fieldset>
+  );
+
+  const soundButton = (
+    <button
+      type="button"
+      onClick={() => {
+        setMuted(!muted);
+        setMutedState(!muted);
+      }}
+      aria-pressed={!muted}
+      aria-label={muted ? t("detail.sound.off") : t("detail.sound.on")}
+      title={muted ? t("detail.sound.off") : t("detail.sound.on")}
+      className="grid size-12 shrink-0 place-items-center rounded-full bg-white/10 hover:bg-white/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-400"
+    >
+      <span aria-hidden="true">{muted ? "🔇" : "🔊"}</span>
+    </button>
+  );
+
+  const gamesGroup =
+    availableGames.length > 1 ? (
+      <div role="radiogroup" aria-label={t("detail.game")} className="flex w-fit shrink-0 items-center gap-1 rounded-full bg-white/10 p-1">
+        <span className="hidden px-2 text-slate-400 sm:inline">{t("detail.game")}</span>
+        {availableGames.map((g) => (
+          <button
+            key={g.id}
+            type="button"
+            role="radio"
+            aria-checked={game === g.id}
+            onClick={() => {
+              setGame(g.id);
+              writeRaw("gbaGame", g.id);
+              setTab(0);
+            }}
+            className={`rounded-full px-3 py-1 font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-400 ${game === g.id ? "bg-white text-slate-900" : "text-slate-300 hover:bg-white/10"}`}
+          >
+            {g[lang]}
+          </button>
+        ))}
+      </div>
+    ) : null;
+
+  const zoomButton = (
+    <button
+      type="button"
+      onClick={() => {
+        setView((v) => (v === "full" ? "screen" : "full"));
+        setSettingsOpen(false);
+      }}
+      className="shrink-0 rounded-full bg-white/10 px-4 py-2 font-medium hover:bg-white/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-400"
+    >
+      {view === "full" ? t("detail.zoomIn") : t("detail.zoomOut")}
+    </button>
+  );
 
   return (
     <div className="relative h-[100dvh] overflow-hidden bg-[radial-gradient(ellipse_at_top,#2a2d4a_0%,#0e1217_70%)] text-[1.5rem] text-slate-200">
@@ -224,13 +317,18 @@ export default function PokemonDetailPage() {
       </div>
 
       {/* Barra superior */}
-      <header ref={headerRef} className="absolute inset-x-0 top-0 z-30 flex flex-col gap-3 px-4 py-3 sm:px-8 sm:py-4">
-        <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
-          <Link to="/" className={`flex items-center gap-2 ${pill}`}>
-            <span aria-hidden="true">←</span> {t("detail.back")}
+      <header ref={headerRef} className="absolute inset-x-0 top-0 z-30 flex flex-col gap-3 px-4 pb-2 pt-3 sm:px-8 sm:py-4">
+        <div className="flex items-center gap-3 sm:gap-6">
+          <Link
+            to="/"
+            aria-label={t("detail.back")}
+            className="flex h-12 shrink-0 items-center gap-2 rounded-full bg-white/10 px-4 font-medium hover:bg-white/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-400"
+          >
+            <span aria-hidden="true">←</span>
+            <span className="hidden sm:inline">{t("detail.back")}</span>
           </Link>
 
-          <h1 className="order-last w-full min-w-0 truncate py-1 text-[1.8rem] font-bold leading-normal sm:order-none sm:w-auto sm:flex-1 sm:text-[2.2rem]">
+          <h1 className="min-w-0 flex-1 truncate py-1 text-[1.9rem] font-bold leading-normal sm:text-[2.2rem]">
             {data ? (
               <>
                 <span className="text-slate-400">#{addZeros(data.speciesId)}</span> {data.displayName}
@@ -240,81 +338,74 @@ export default function PokemonDetailPage() {
             )}
           </h1>
 
-          <div className="ml-auto flex items-center gap-3 sm:ml-0">
-            <fieldset className="flex items-center gap-2">
-              <legend className="sr-only">{t("detail.shell")}</legend>
-              {SHELLS.map((s) => {
-                const c = s.id === "type" ? shellColor : s.color;
-                return (
-                  <button
-                    key={s.id}
-                    type="button"
-                    title={s[lang]}
-                    aria-label={`${t("detail.shell")}: ${s[lang]}`}
-                    aria-pressed={shellId === s.id}
-                    onClick={() => {
-                      setShellId(s.id);
-                      writeRaw("gbaShell", s.id);
-                    }}
-                    className={`size-8 rounded-full border-2 transition-transform hover:scale-110 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400 ${shellId === s.id ? "scale-110 border-white" : "border-white/30"}`}
-                    style={{ background: s.id === "type" ? `conic-gradient(${c} 0 50%, #f4f1de 50% 100%)` : c }}
-                  />
-                );
-              })}
-            </fieldset>
-            <button
-              type="button"
-              onClick={() => {
-                setMuted(!muted);
-                setMutedState(!muted);
-              }}
-              aria-pressed={!muted}
-              aria-label={muted ? t("detail.sound.off") : t("detail.sound.on")}
-              title={muted ? t("detail.sound.off") : t("detail.sound.on")}
-              className="grid size-12 place-items-center rounded-full bg-white/10 hover:bg-white/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-400"
-            >
-              <span aria-hidden="true">{muted ? "🔇" : "🔊"}</span>
-            </button>
+          {/* Escritorio: controles en línea */}
+          <div className="hidden items-center gap-3 sm:flex">
+            {shellSwatches("size-8")}
+            {soundButton}
             <LangToggle />
           </div>
-        </div>
 
-        {/* Segunda fila: forma, juego de sprites y zoom */}
-        <div className="no-scrollbar -mx-4 flex items-center gap-3 overflow-x-auto px-4 sm:mx-0 sm:px-0">
-          {data && data.forms.length > 1 && (
-            <FormPicker
-              forms={data.forms}
-              currentId={data.id}
-              lang={lang}
-              onChange={(fid) => navigate(`/pokemon/${fid}`, { replace: true })}
-            />
-          )}
-          {availableGames.length > 1 && (
-            <div role="radiogroup" aria-label={t("detail.game")} className="flex shrink-0 items-center gap-1 rounded-full bg-white/10 p-1">
-              <span className="px-2 text-slate-400">{t("detail.game")}</span>
-              {availableGames.map((g) => (
-                <button
-                  key={g.id}
-                  type="button"
-                  role="radio"
-                  aria-checked={game === g.id}
-                  onClick={() => {
-                    setGame(g.id);
-                    writeRaw("gbaGame", g.id);
-                    setTab(0);
-                  }}
-                  className={`rounded-full px-3 py-1 font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-400 ${game === g.id ? "bg-white text-slate-900" : "text-slate-300 hover:bg-white/10"}`}
-                >
-                  {g[lang]}
-                </button>
-              ))}
-            </div>
-          )}
-          <button type="button" onClick={() => setView((v) => (v === "full" ? "screen" : "full"))} className={`ml-auto shrink-0 ${pill}`}>
-            {view === "full" ? t("detail.zoomIn") : t("detail.zoomOut")}
+          {/* Móvil: todo en un panel de ajustes */}
+          <button
+            type="button"
+            onClick={() => setSettingsOpen((v) => !v)}
+            aria-expanded={settingsOpen}
+            aria-controls="gba-settings"
+            aria-label={lang === "es" ? "Ajustes" : "Settings"}
+            className={`grid size-12 shrink-0 place-items-center rounded-full transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-400 sm:hidden ${settingsOpen ? "bg-white text-slate-900" : "bg-white/10 hover:bg-white/20"}`}
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="size-7" aria-hidden="true">
+              <path d="M4 7h10M18 7h2M4 17h4M12 17h8" />
+              <circle cx="16" cy="7" r="2" />
+              <circle cx="10" cy="17" r="2" />
+            </svg>
           </button>
         </div>
+
+        {/* Segunda fila: forma (+ sprites y zoom en escritorio) */}
+        {(data?.forms.length ?? 0) > 1 || availableGames.length > 1 ? (
+          <div className="flex items-center gap-3">
+            {data && data.forms.length > 1 && (
+              <FormPicker
+                forms={data.forms}
+                currentId={data.id}
+                lang={lang}
+                onChange={(fid) => navigate(`/pokemon/${fid}`, { replace: true })}
+              />
+            )}
+            <div className="hidden flex-1 items-center gap-3 sm:flex">
+              {gamesGroup}
+              <span className="ml-auto">{zoomButton}</span>
+            </div>
+          </div>
+        ) : (
+          <div className="hidden justify-end sm:flex">{zoomButton}</div>
+        )}
       </header>
+
+      {/* Panel de ajustes (móvil) */}
+      {settingsOpen && (
+        <div
+          id="gba-settings"
+          ref={settingsRef}
+          style={{ top: insets.top }}
+          className="absolute inset-x-3 z-40 origin-top animate-[pop_140ms_ease-out] rounded-3xl bg-[#161a21]/95 p-5 shadow-[0_24px_60px_-12px_rgb(0_0_0/0.7)] ring-1 ring-white/10 backdrop-blur-xl sm:hidden"
+        >
+          <p className="mb-3 text-[1.2rem] font-semibold uppercase tracking-wider text-slate-400">{t("detail.shell")}</p>
+          {shellSwatches("size-12")}
+          {availableGames.length > 1 && (
+            <>
+              <p className="mb-3 mt-5 text-[1.2rem] font-semibold uppercase tracking-wider text-slate-400">{t("detail.game")}</p>
+              {gamesGroup}
+            </>
+          )}
+          <div className="mt-5 flex items-center gap-3">
+            {soundButton}
+            <LangToggle />
+            <span className="ml-auto">{zoomButton}</span>
+          </div>
+        </div>
+      )}
 
       <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20">
         {/* Ayuda de teclado (escritorio) */}
@@ -328,7 +419,7 @@ export default function PokemonDetailPage() {
       </div>
 
       {/* Mando táctil (móvil / tablet) */}
-      <TouchPad ref={padRef} onButton={handleButton} lang={lang} />
+      <TouchPad ref={padRef} onButton={handleButton} lang={lang} shellColor={shellColor} />
 
       {/* Versión accesible del contenido de la pantalla */}
       {data && (
@@ -355,48 +446,99 @@ export default function PokemonDetailPage() {
   );
 }
 
-const TouchPad = forwardRef<HTMLDivElement, { onButton: (b: GBAButton) => void; lang: Lang }>(function TouchPad({ onButton, lang }, ref) {
-  const L = PAD_LABELS[lang];
-  // Táctil/ratón: al bajar el dedo (más rápido). Teclado: click sin puntero.
-  const press = (b: GBAButton) => ({
-    onPointerDown: (e: PointerEvent) => {
-      e.preventDefault();
-      onButton(b);
-    },
-    onClick: (e: MouseEvent) => {
-      if (e.detail === 0) onButton(b);
-    },
-  });
-  const dir = "gba-pad-btn size-14 bg-[#24242c] text-white/80 text-[1.4rem]";
-  return (
-    <div ref={ref} className="absolute inset-x-0 bottom-0 z-30 grid grid-cols-[auto_1fr_auto] items-center gap-4 bg-gradient-to-t from-[#0e1217] via-[#0e1217]/90 to-transparent px-6 pb-[max(1.6rem,env(safe-area-inset-bottom))] pt-6 lg:hidden">
-      <div className="grid grid-cols-3 grid-rows-3" aria-label={L.pad} role="group">
-        <span />
-        <button type="button" aria-label={L.up} className={`${dir} rounded-t-lg`} {...press("up")}>▲</button>
-        <span />
-        <button type="button" aria-label={L.left} className={`${dir} rounded-l-lg`} {...press("left")}>◀</button>
-        <span className="size-14 bg-[#24242c]" />
-        <button type="button" aria-label={L.right} className={`${dir} rounded-r-lg`} {...press("right")}>▶</button>
-        <span />
-        <button type="button" aria-label={L.down} className={`${dir} rounded-b-lg`} {...press("down")}>▼</button>
-        <span />
-      </div>
+/** Mando táctil con el aspecto de la mitad inferior de una GBA. */
+const TouchPad = forwardRef<HTMLDivElement, { onButton: (b: GBAButton) => void; lang: Lang; shellColor: string }>(
+  function TouchPad({ onButton, lang, shellColor }, ref) {
+    const L = PAD_LABELS[lang];
+    // Táctil/ratón: al bajar el dedo (más rápido). Teclado: click sin puntero.
+    const press = (b: GBAButton) => ({
+      onPointerDown: (e: PointerEvent) => {
+        e.preventDefault();
+        if (navigator.vibrate) navigator.vibrate(8);
+        onButton(b);
+      },
+      onClick: (e: MouseEvent) => {
+        if (e.detail === 0) onButton(b);
+      },
+    });
 
-      <div className="flex flex-col items-center gap-4">
-        <div className="flex gap-3">
-          <button type="button" className="gba-pad-btn h-10 w-20 rounded-full bg-[#3a3a46] font-bold" {...press("l")} aria-label={L.l}>L</button>
-          <button type="button" className="gba-pad-btn h-10 w-20 rounded-full bg-[#3a3a46] font-bold" {...press("r")} aria-label={L.r}>R</button>
-        </div>
-        <div className="flex gap-3 text-[1.1rem] tracking-wider">
-          <button type="button" className="gba-pad-btn h-8 rounded-full bg-[#24242c] px-4" {...press("select")}>SELECT</button>
-          <button type="button" className="gba-pad-btn h-8 rounded-full bg-[#24242c] px-4" {...press("start")}>START</button>
-        </div>
-      </div>
+    // Botón gris claro con "profundidad" (sombra inferior que se aplasta al pulsar).
+    const key =
+      "gba-pad-btn select-none bg-[#d6d6dc] text-[#6f6f7c] shadow-[0_3px_0_#a5a5b0,0_6px_12px_-4px_rgb(0_0_0/0.45)] active:translate-y-[2px] active:shadow-[0_1px_0_#a5a5b0,0_2px_6px_-2px_rgb(0_0_0/0.4)]";
+    const arm = `${key} grid size-[4.8rem] place-items-center text-[1.3rem]`;
+    const engraved = "text-[1rem] font-bold tracking-[0.12em] text-white/70";
 
-      <div className="relative h-32 w-32">
-        <button type="button" aria-label={L.b} className="gba-pad-btn absolute bottom-0 left-0 size-16 rounded-full bg-[#d8d4e6] text-[1.8rem] font-bold text-[#3b3555]" {...press("b")}>B</button>
-        <button type="button" aria-label={L.a} className="gba-pad-btn absolute right-0 top-0 size-16 rounded-full bg-[#d8d4e6] text-[1.8rem] font-bold text-[#3b3555]" {...press("a")}>A</button>
+    return (
+      <div
+        ref={ref}
+        className="absolute inset-x-0 bottom-0 z-30 overflow-hidden rounded-t-[3.6rem] pb-[max(1.6rem,env(safe-area-inset-bottom))] pt-4 shadow-[0_-20px_40px_-10px_rgb(0_0_0/0.6)] lg:hidden"
+        style={{
+          backgroundColor: shellColor,
+          backgroundImage:
+            "linear-gradient(180deg, rgb(255 255 255 / 0.18), rgb(255 255 255 / 0.02) 30%, rgb(0 0 0 / 0.18))",
+        }}
+      >
+        {/* Brillo del borde superior */}
+        <div aria-hidden="true" className="pointer-events-none absolute inset-x-10 top-0 h-px bg-white/50" />
+
+        {/* Gatillos L / R en las esquinas */}
+        <div className="mb-2 flex justify-between px-4">
+          <button type="button" aria-label={L.l} className={`${key} h-10 w-28 rounded-b-xl rounded-t-[2rem] text-[1.3rem] font-bold`} {...press("l")}>
+            L
+          </button>
+          <button type="button" aria-label={L.r} className={`${key} h-10 w-28 rounded-b-xl rounded-t-[2rem] text-[1.3rem] font-bold`} {...press("r")}>
+            R
+          </button>
+        </div>
+
+        <div className="grid grid-cols-[auto_1fr_auto] items-center gap-1 px-4 min-[400px]:px-6">
+          {/* Cruceta en cruz, como la del modelo 3D */}
+          <div role="group" aria-label={L.pad} className="grid grid-cols-3 grid-rows-3 drop-shadow-[0_6px_8px_rgb(0_0_0/0.35)]">
+            <span />
+            <button type="button" aria-label={L.up} className={`${arm} rounded-t-xl`} {...press("up")}>▲</button>
+            <span />
+            <button type="button" aria-label={L.left} className={`${arm} rounded-l-xl`} {...press("left")}>◀</button>
+            <span className="grid size-[4.8rem] place-items-center bg-[#d6d6dc]">
+              <span className="size-5 rounded-full bg-[#bdbdc6] shadow-inner" />
+            </span>
+            <button type="button" aria-label={L.right} className={`${arm} rounded-r-xl`} {...press("right")}>▶</button>
+            <span />
+            <button type="button" aria-label={L.down} className={`${arm} rounded-b-xl`} {...press("down")}>▼</button>
+            <span />
+          </div>
+
+          {/* Start / Select al centro */}
+          <div className="flex flex-col items-center justify-end gap-4 self-end pb-2">
+            {(["select", "start"] as const).map((b) => (
+              <div key={b} className="flex flex-col items-center gap-1">
+                <button type="button" aria-label={b.toUpperCase()} className={`${key} h-5 w-14 rounded-full`} {...press(b)} />
+                <span className={engraved}>{b.toUpperCase()}</span>
+              </div>
+            ))}
+          </div>
+
+          {/* A / B en diagonal */}
+          <div className="relative h-[13.6rem] w-[11.6rem]">
+            <div className="absolute bottom-6 left-0 flex flex-col items-center gap-1">
+              <button type="button" aria-label={L.b} className={`${key} grid size-[5.6rem] place-items-center rounded-full text-[1.8rem] font-bold`} {...press("b")}>
+                B
+              </button>
+            </div>
+            <div className="absolute right-0 top-4 flex flex-col items-center gap-1">
+              <button type="button" aria-label={L.a} className={`${key} grid size-[5.6rem] place-items-center rounded-full text-[1.8rem] font-bold`} {...press("a")}>
+                A
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Ranuras del altavoz (decorativas) */}
+        <div aria-hidden="true" className="pointer-events-none absolute bottom-[max(1.2rem,env(safe-area-inset-bottom))] right-8 flex flex-col gap-1.5 opacity-40">
+          {[0, 1, 2, 3].map((i) => (
+            <span key={i} className="h-1 rounded-full bg-black/60" style={{ width: `${5.6 - i * 0.4}rem`, transform: "rotate(-10deg)" }} />
+          ))}
+        </div>
       </div>
-    </div>
-  );
-});
+    );
+  },
+);
